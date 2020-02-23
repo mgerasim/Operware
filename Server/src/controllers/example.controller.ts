@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { Controller, Middleware, Get, Put, Post, Delete } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
 
-@Controller('api')
+@Controller('api/example')
 export class ExampleController {
 
     @Get(':msg')

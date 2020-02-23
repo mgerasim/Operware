@@ -59,7 +59,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:returntype", void 0)
 ], ExampleController.prototype, "delMessage", null);
 ExampleController = tslib_1.__decorate([
-    core_1.Controller('api')
+    core_1.Controller('api/example')
 ], ExampleController);
 exports.ExampleController = ExampleController;
 //# sourceMappingURL=example.controller.js.map
