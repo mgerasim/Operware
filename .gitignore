@@ -1,4 +1,3 @@
-led output
 /dist
 /tmp
 /out-tsc
@@ -45,15 +44,4 @@ testem.log
 /typings
 
 # System Files
-.DS_Store
-B
-A
-A
-A
-A
-A
-A
-A
-A
-A
 Thumbs.db
