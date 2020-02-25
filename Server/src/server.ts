@@ -46,7 +46,12 @@ class ExampleServer extends Server {
         });
         Configuration.findAll().then(configurations => {
             const configuration = configurations[0];
-            client.connect('avancrm', 'JD3clEB8_f23r-3ry84gJ', { host: 'avantelecom.avantele.com', port: 5038 })
+            client.connect(configuration.AMI_username, 
+                configuration.AMI_password, 
+                { 
+                    host: configuration.AMI_server, 
+                    port: configuration.AMI_port 
+                })
                 .then(() => {
                     this.processor = new Processor(configuration);
                     client

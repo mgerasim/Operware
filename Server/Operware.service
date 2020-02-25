@@ -2,7 +2,7 @@
 Description=Operator Ware
 
 [Service]
-WorkingDirectory=/home/misha/apps/Operware
+WorkingDirectory=/home/misha/apps/Operware/Server
 ExecStart=/usr/bin/node /home/misha/apps/Operware/Server/start.js
 Restart=always
 # Restart service after 10 seconds if the dotnet service crashes:
