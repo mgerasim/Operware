@@ -4,13 +4,30 @@ const tslib_1 = require("tslib");
 const core_1 = require("@overnightjs/core");
 const logger_1 = require("@overnightjs/logger");
 const call_1 = require("../models/call");
+const variable_1 = require("../models/variable");
 let CallController = class CallController {
     getCalls(req, res) {
         logger_1.Logger.Info(req.params.msg);
-        call_1.Call.findAll().then(calls => {
+        call_1.Call.findAll({
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        }).then(calls => {
             res.status(200).json(calls);
         }).catch(err => {
             logger_1.Logger.Err(err.message);
+        });
+    }
+    getVariablesByCall(req, res) {
+        logger_1.Logger.Info(req.params.pbxCallId);
+        variable_1.Variable.findAll({
+            where: {
+                pbx_call_id: req.params.pbxCallId
+            }
+        }).then(variables => {
+            res.status(200).json(variables);
+        }).catch(err => {
+            res.status(500).json(err);
         });
     }
 };
@@ -20,6 +37,12 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", [Object, Object]),
     tslib_1.__metadata("design:returntype", void 0)
 ], CallController.prototype, "getCalls", null);
+tslib_1.__decorate([
+    core_1.Get(':pbxCallId/variables'),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [Object, Object]),
+    tslib_1.__metadata("design:returntype", void 0)
+], CallController.prototype, "getVariablesByCall", null);
 CallController = tslib_1.__decorate([
     core_1.Controller('api/calls')
 ], CallController);

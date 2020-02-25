@@ -1,6 +1,7 @@
 import { Logger } from '@overnightjs/logger';
 import { Configuration } from './models/configuration';
 import { Call } from './models/call';
+import { Variable } from './models/variable';
 
 const axios = require('axios')
 
@@ -8,8 +9,6 @@ export class Processor {
     constructor(private configuration: Configuration) {}
 
     async eventHandle(event: any) {
-        console.log(event);
-        Logger.Info(event);
 
         switch(event.Event) {
             // AMI событие привязки входящего звонка
@@ -183,19 +182,27 @@ export class Processor {
                 break;
             }
             case 'VarSet': {
+                console.log(`${event.Variable} = ${event.Value}`)
                 if (event.Linkedid === undefined) {
                     return;
                 }
-                if (event.Variable == 'MIXMONITOR_FILENAME') {
 
-                    const call = await Call.findOne({
-                        where: {
-                            pbx_call_id: event.Linkedid
-                        }
-                    });
-                    if (call === undefined || call === null) {
-                        return;
+                const call = await Call.findOne({
+                    where: {
+                        pbx_call_id: event.Linkedid
                     }
+                });
+                if (call === undefined || call === null) {
+                    return;
+                }
+
+                const variable = await Variable.create({
+                    title: event.Variable,
+                    value: event.Value,
+                    pbx_call_id: event.Linkedid
+                });
+
+                if (event.Variable == 'MIXMONITOR_FILENAME') {
 
                     console.log(`${event.Variable} = ${event.Value}`);
                     call.call_filename = event.Value;
