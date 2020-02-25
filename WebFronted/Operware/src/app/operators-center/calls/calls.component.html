@@ -1,0 +1,35 @@
+<dx-data-grid *ngIf="calls"
+              id="gridContainer"
+              [dataSource]="calls"
+              [showBorders]="true"
+              [allowColumnResizing]="true"
+              [allowColumnReordering]="true">
+  <dxo-paging [pageSize]="20"></dxo-paging>
+  <dxo-search-panel [visible]="true"></dxo-search-panel>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-column-chooser
+    [enabled]="true"
+    mode="dragAndDrop"> <!-- or "select" -->
+  </dxo-column-chooser>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[20, 30, 40]"
+    [showInfo]="true">
+  </dxo-pager>
+
+  <dxi-column dataField="createdAt"></dxi-column>
+  <dxi-column dataField="call_start"></dxi-column>
+  <dxi-column dataField="call_answer"></dxi-column>
+  <dxi-column dataField="call_end"></dxi-column>
+  <dxi-column dataField="pbx_call_id" cellTemplate="pbxCallIdCellTemplate"></dxi-column>
+  <dxi-column dataField="caller_id"></dxi-column>
+  <dxi-column dataField="internal"></dxi-column>
+  <dxi-column dataField="duration"></dxi-column>
+  <dxi-column dataField="call_filename"></dxi-column>
+
+  <div *dxTemplate="let d of 'pbxCallIdCellTemplate'">
+    <a [routerLink]="['/events/' + d.data.pbx_call_id]">
+      {{ d.data.pbx_call_id }}
+    </a>
+  </div>
+</dx-data-grid>
