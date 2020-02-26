@@ -40,6 +40,14 @@ tslib_1.__decorate([
     sequelize_typescript_1.Column,
     tslib_1.__metadata("design:type", String)
 ], Call.prototype, "call_filename", void 0);
+tslib_1.__decorate([
+    sequelize_typescript_1.Column,
+    tslib_1.__metadata("design:type", String)
+], Call.prototype, "responsibles", void 0);
+tslib_1.__decorate([
+    sequelize_typescript_1.Column,
+    tslib_1.__metadata("design:type", String)
+], Call.prototype, "called_phone_number", void 0);
 Call = tslib_1.__decorate([
     sequelize_typescript_1.Table
 ], Call);

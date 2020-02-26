@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
+const logger_1 = require("@overnightjs/logger");
+const event_1 = require("./models/event");
 const call_1 = require("./models/call");
 const variable_1 = require("./models/variable");
 const axios = require('axios');
@@ -10,6 +12,12 @@ class Processor {
     }
     eventHandle(event) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                yield event_1.Event.create(event);
+            }
+            catch (err) {
+                logger_1.Logger.Err(err);
+            }
             switch (event.Event) {
                 // AMI событие привязки входящего звонка
                 case this.configuration.incomingStartCallEvent: {
@@ -19,10 +27,18 @@ class Processor {
                         if (call) {
                             return;
                         }
+                        let called_phone_number = event.Exten;
+                        if (called_phone_number.length === 6) {
+                            called_phone_number = '74212' + called_phone_number;
+                        }
+                        else if (called_phone_number.length === 10) {
+                            called_phone_number = '7' + called_phone_number;
+                        }
                         yield call_1.Call.create({
                             call_start: new Date(),
                             pbx_call_id: event.Linkedid,
-                            caller_id: event.CallerIDNum
+                            caller_id: event.CallerIDNum,
+                            called_phone_number: called_phone_number
                         });
                         const userField = new Object();
                         userField['status'] = 'incoming_call';
@@ -33,7 +49,10 @@ class Processor {
                         Object.assign(callParam['call'], pbxCallIdField);
                         let incomingField = new Object();
                         incomingField['contact_phone_number'] = event.CallerIDNum;
+                        const calledPhoneNumberField = new Object();
+                        calledPhoneNumberField['called_phone_number'] = called_phone_number;
                         Object.assign(callParam['call'], incomingField);
+                        Object.assign(callParam['call'], calledPhoneNumberField);
                         console.log('Отправление уведомление о входящем звонке ... ');
                         console.log(callParam);
                         const body = callParam;
@@ -67,10 +86,17 @@ class Processor {
                         call.call_end = new Date();
                         yield call.save();
                         if (call.internal !== null) {
+                            if (!(call.duration > 0)) {
+                                call.duration = Math.round((call.call_end.getTime() - call.call_answer.getTime()) / 1000);
+                                yield call.save();
+                            }
                             let userField = new Object();
                             userField['status'] = 'call_finished';
                             let callParam = new Object();
                             callParam['call'] = userField;
+                            const durationField = new Object();
+                            durationField['duration'] = call.duration;
+                            Object.assign(callParam['call'], durationField);
                             let pbxCallIdField = new Object();
                             pbxCallIdField['call_session_id'] = this.reverseString(event.Linkedid.replace(/\D/g, '')).substring(0, 7);
                             Object.assign(callParam['call'], pbxCallIdField);
@@ -170,7 +196,6 @@ class Processor {
                     break;
                 }
                 case 'VarSet': {
-                    console.log(`${event.Variable} = ${event.Value}`);
                     if (event.Linkedid === undefined) {
                         return;
                     }
@@ -187,8 +212,11 @@ class Processor {
                         value: event.Value,
                         pbx_call_id: event.Linkedid
                     });
-                    if (event.Variable == 'MIXMONITOR_FILENAME') {
-                        console.log(`${event.Variable} = ${event.Value}`);
+                    if (event.Variable === '__FROM_DID') {
+                        call.responsibles = event.Value;
+                        yield call.save();
+                    }
+                    if (event.Variable === 'MIXMONITOR_FILENAME') {
                         call.call_filename = event.Value;
                         yield call.save();
                         let userField = new Object();
@@ -198,7 +226,7 @@ class Processor {
                         let pbxCallIdField = new Object();
                         pbxCallIdField['call_session_id'] = this.reverseString(event.Linkedid.replace(/\D/g, '')).substring(0, 7);
                         Object.assign(callParam['call'], pbxCallIdField);
-                        let file_link = event.Value;
+                        let file_link = event.Value.replace('/var/spool/asterisk', `https://${this.configuration.baseUrl}/CRM`).replace('.wav', '.mp3');
                         let fileLinkField = new Object();
                         fileLinkField['file_link'] = file_link;
                         Object.assign(callParam['call'], fileLinkField);

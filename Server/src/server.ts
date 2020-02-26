@@ -6,11 +6,15 @@ import { Server } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
 import { Sequelize } from 'sequelize-typescript';
 import { Configuration } from './models/configuration'
+import { Event } from './models/event'
 import { Processor } from './processor';
 import { Call } from './models/call';
 import { Variable } from './models/variable';
 const AmiClient = require('asterisk-ami-client');
 const sequelize = require('./databaseProvider')
+import * as moment from 'moment';
+
+import * as schedule from 'node-schedule';
 
 class ExampleServer extends Server {
 
@@ -26,6 +30,22 @@ class ExampleServer extends Server {
         this.setupControllers();
         this.setupDatabaseProvider();2
         this.setupAmiClient();
+        this.setupSchedule();
+    }
+
+    private setupSchedule() {
+        const { Op } = require('sequelize')
+        
+        var j = schedule.scheduleJob('2 * * * *', function(){
+            console.log('delete');
+            console.log(moment().subtract(1, 'hours').toDate());
+
+        Event.destroy({ where: { 
+                createdAt: {
+                    [Op.lte]: moment().subtract(1, 'hours').toDate()
+                }
+            } });
+        });
     }
 
     private setupStatic() {
@@ -118,8 +138,10 @@ class ExampleServer extends Server {
                 })
                 .catch(error =>
                 {
-                    console.log('connect ami client');
-                    console.log(error)
+                    console.log('connect ami client error');
+                    Logger.Err(configuration.AMI_server);
+                    Logger.Err(configuration.AMI_username);
+                    Logger.Err(configuration.AMI_password);
                     Logger.Err(error);
                 });
         })
@@ -136,7 +158,8 @@ class ExampleServer extends Server {
         sequelize.addModels([
             Configuration,
             Call,
-            Variable
+            Variable,
+            Event
         ]);
         sequelize.sync();
     }

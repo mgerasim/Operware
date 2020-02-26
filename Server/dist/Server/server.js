@@ -7,11 +7,14 @@ const morgan = require("morgan");
 const core_1 = require("@overnightjs/core");
 const logger_1 = require("@overnightjs/logger");
 const configuration_1 = require("./models/configuration");
+const event_1 = require("./models/event");
 const processor_1 = require("./processor");
 const call_1 = require("./models/call");
 const variable_1 = require("./models/variable");
 const AmiClient = require('asterisk-ami-client');
 const sequelize = require('./databaseProvider');
+const moment = require("moment");
+const schedule = require("node-schedule");
 class ExampleServer extends core_1.Server {
     constructor() {
         super(true);
@@ -23,6 +26,19 @@ class ExampleServer extends core_1.Server {
         this.setupDatabaseProvider();
         2;
         this.setupAmiClient();
+        this.setupSchedule();
+    }
+    setupSchedule() {
+        const { Op } = require('sequelize');
+        var j = schedule.scheduleJob('2 * * * *', function () {
+            console.log('delete');
+            console.log(moment().subtract(1, 'hours').toDate());
+            event_1.Event.destroy({ where: {
+                    createdAt: {
+                        [Op.lte]: moment().subtract(1, 'hours').toDate()
+                    }
+                } });
+        });
     }
     setupStatic() {
         this.app.use('/', express.static('public'));
@@ -40,7 +56,10 @@ class ExampleServer extends core_1.Server {
         });
         configuration_1.Configuration.findAll().then(configurations => {
             const configuration = configurations[0];
-            client.connect('avancrm', 'JD3clEB8_f23r-3ry84gJ', { host: 'avantelecom.avantele.com', port: 5038 })
+            client.connect(configuration.AMI_username, configuration.AMI_password, {
+                host: configuration.AMI_server,
+                port: configuration.AMI_port
+            })
                 .then(() => {
                 this.processor = new processor_1.Processor(configuration);
                 client
@@ -105,8 +124,10 @@ class ExampleServer extends core_1.Server {
                 });
             })
                 .catch(error => {
-                console.log('connect ami client');
-                console.log(error);
+                console.log('connect ami client error');
+                logger_1.Logger.Err(configuration.AMI_server);
+                logger_1.Logger.Err(configuration.AMI_username);
+                logger_1.Logger.Err(configuration.AMI_password);
                 logger_1.Logger.Err(error);
             });
         })
@@ -119,7 +140,8 @@ class ExampleServer extends core_1.Server {
         sequelize.addModels([
             configuration_1.Configuration,
             call_1.Call,
-            variable_1.Variable
+            variable_1.Variable,
+            event_1.Event
         ]);
         sequelize.sync();
     }

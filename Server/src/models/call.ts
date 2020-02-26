@@ -22,4 +22,8 @@ export class Call extends Model<Call> {
     internal: string;
     @Column
     call_filename: string;
+    @Column
+    responsibles: string;
+    @Column
+    called_phone_number: string;
 }
