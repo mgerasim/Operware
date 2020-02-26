@@ -1,4 +1,4 @@
-export class Call {
+export class Variable {
   createdAt: Date;
   updatedAt: Date;
   call_start: Date;
@@ -9,6 +9,4 @@ export class Call {
   duration: number;
   internal: string;
   call_filename: string;
-  responsibles: string;
-  called_phone_number: string;
 }

@@ -4,15 +4,17 @@ import { CommonModule } from '@angular/common';
 import { OperatorsCenterRoutingModule } from './operators-center-routing.module';
 import { CallsComponent } from './calls/calls.component';
 import { OperatorsLayoutComponent } from './operators-layout/operators-layout.component';
-import {DxDataGridModule} from 'devextreme-angular';
+import {DxDataGridModule, DxTextBoxModule} from 'devextreme-angular';
+import { EventsComponent } from './calls/events/events.component';
 
 
 @NgModule({
-  declarations: [CallsComponent, OperatorsLayoutComponent],
+  declarations: [CallsComponent, OperatorsLayoutComponent, EventsComponent],
   imports: [
     CommonModule,
     OperatorsCenterRoutingModule,
-    DxDataGridModule
+    DxDataGridModule,
+    DxTextBoxModule
   ]
 })
 export class OperatorsCenterModule { }

@@ -24,11 +24,13 @@
   <dxi-column dataField="pbx_call_id" cellTemplate="pbxCallIdCellTemplate"></dxi-column>
   <dxi-column dataField="caller_id"></dxi-column>
   <dxi-column dataField="internal"></dxi-column>
+  <dxi-column dataField="responsibles"></dxi-column>
+  <dxi-column dataField="called_phone_number"></dxi-column>
   <dxi-column dataField="duration"></dxi-column>
   <dxi-column dataField="call_filename"></dxi-column>
 
   <div *dxTemplate="let d of 'pbxCallIdCellTemplate'">
-    <a [routerLink]="['/events/' + d.data.pbx_call_id]">
+    <a [routerLink]="['/calls/' + d.data.pbx_call_id] + '/events'">
       {{ d.data.pbx_call_id }}
     </a>
   </div>
