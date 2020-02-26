@@ -1,0 +1,40 @@
+
+<dx-data-grid *ngIf="events"
+              id="gridContainer"
+              [dataSource]="events"
+              [showBorders]="true"
+              [allowColumnResizing]="true"
+              [allowColumnReordering]="true">
+  <dxo-paging [pageSize]="20"></dxo-paging>
+  <dxo-search-panel [visible]="true"></dxo-search-panel>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-column-chooser
+    [enabled]="true"
+    mode="dragAndDrop"> <!-- or "select" -->
+  </dxo-column-chooser>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[5, 10, 20]"
+    [showInfo]="true">
+  </dxo-pager>
+
+  <dxi-column dataField="createdAt"></dxi-column>
+  <dxi-column dataField="Event"></dxi-column>
+  <dxi-column dataField="Privilege"></dxi-column>
+  <dxi-column dataField="Channel"></dxi-column>
+  <dxi-column dataField="ChannelState"></dxi-column>
+  <dxi-column dataField="ChannelStateDesc"></dxi-column>
+  <dxi-column dataField="CallerIDNum"></dxi-column>
+  <dxi-column dataField="CallerIDName"></dxi-column>
+  <dxi-column dataField="ConnectedLineNum"></dxi-column>
+  <dxi-column dataField="ConnectedLineName"></dxi-column>
+  <dxi-column dataField="Language"></dxi-column>
+  <dxi-column dataField="AccountCode"></dxi-column>
+  <dxi-column dataField="Context"></dxi-column>
+  <dxi-column dataField="Exten"></dxi-column>
+  <dxi-column dataField="Priority"></dxi-column>
+  <dxi-column dataField="Variable"></dxi-column>
+  <dxi-column dataField="Value"></dxi-column>
+  <dxi-column dataField="Uniqueid"></dxi-column>
+  <dxi-column dataField="Linkedid"></dxi-column>
+</dx-data-grid>

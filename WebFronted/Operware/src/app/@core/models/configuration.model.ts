@@ -7,6 +7,7 @@ export class Configuration {
   AMI_port: number;
   authKey: string;
   baseUrl: string;
+  defaultResponsibles: string;
 
   incomingStartCallEvent: string;
   incomingStartCallField: string;
