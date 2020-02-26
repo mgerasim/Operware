@@ -4,6 +4,7 @@ import { Event } from './models/event';
 import { Call } from './models/call';
 import { Variable } from './models/variable';
 import moment = require('moment');
+import { isNullOrUndefined } from 'util';
 
 const axios = require('axios')
 
@@ -18,10 +19,25 @@ export class Processor {
             Logger.Err(err);
         }
 
-        switch(event.Event) {
+        if (event.Event === 'Newstate' 
+            && event.ChannelStateDesc === 'Ringing' 
+            && event.Priority === '1'
+            && event.Channel.includes('SIP/')) {
+            const call = await Call.findOne({
+                where: {
+                    pbx_call_id: event.Linkedid
+                }
+            });
+            if (call === undefined || call === null) {
+                return;
+            }
+            call.responsibles = isNullOrUndefined(call.responsibles) ? event.CallerIDNum : `${call.responsibles}|${event.CallerIDNum}`;
+            await call.save();
+        }
+
+        if (event.Event === this.configuration.incomingStartCallEvent) {
             // AMI событие привязки входящего звонка
-            case this.configuration.incomingStartCallEvent: {
-                if (this.configuration.incomingStartCallValue.includes(event[this.configuration.incomingStartCallField])
+            if (this.configuration.incomingStartCallValue.includes(event[this.configuration.incomingStartCallField])
                     && this.configuration.incomingStartCallValue2.includes(event[this.configuration.incomingStartCallField2])) {
                         const call = await Call.findOne({ where: { pbx_call_id: event.Linkedid } })
 
@@ -74,10 +90,10 @@ export class Processor {
                                 // Exception.create({ message: 'Ошибка при отправке уведомление о входящем звонке', stack: error.stack.substring(0, 254) }).then();
                             })
                 }
-                break;
-            } 
-            case this.configuration.incomingEndCallEvent: {
-                if (this.configuration.incomingEndCallValue.includes(event[this.configuration.incomingEndCallField])
+        }
+
+        if (event.Event === this.configuration.incomingEndCallEvent) {
+            if (this.configuration.incomingEndCallValue.includes(event[this.configuration.incomingEndCallField])
                 && this.configuration.incomingEndCallValue2.includes(event[this.configuration.incomingEndCallField2])) {
                     const call = await Call.findOne({
                         where: {
@@ -134,9 +150,19 @@ export class Processor {
                         let pbxCallIdField = new Object();
                         pbxCallIdField['call_session_id'] = this.reverseString(event.Linkedid.replace(/\D/g, '')).substring(0, 7);
                         Object.assign(callParam['call'], pbxCallIdField);
-                        let responsible = { id: 7 };
+                        console.log('Формируем массив ответственных');
+                        if (isNullOrUndefined(call.responsibles)) {
+                            call.responsibles = this.configuration.defaultResponsibles;
+                            await call.save();
+                        }
+                        let responsible = new Array<{ id: number }>();
+                        console.log(call.responsibles)
+                        call.responsibles.split('|').forEach(x => {
+                            responsible.push({id: parseInt(x)});
+                        });
+                        console.log(responsible);
                         let responsiblesField = new Object();
-                        responsiblesField['responsibles'] = [responsible];
+                        responsiblesField['responsibles'] = responsible;
                         Object.assign(callParam['call'], responsiblesField);
                         console.log('Отправка уведомление о пропущенном вызове');
                         console.log(JSON.stringify(callParam));
@@ -157,11 +183,12 @@ export class Processor {
                             })
                     }
                 }
-                break;
-            }
-            case this.configuration.incomingAnswerCallEvent: {
-                if (this.configuration.incomingAnswerCallValue.includes(event[this.configuration.incomingAnswerCallField])
-                && this.configuration.incomingAnswerCallValue2.includes(event[this.configuration.incomingAnswerCallField2])) {
+        }
+
+        if (event.Event === this.configuration.incomingAnswerCallEvent) {
+            if (this.configuration.incomingAnswerCallValue.includes(event[this.configuration.incomingAnswerCallField])
+                && this.configuration.incomingAnswerCallValue2.includes(event[this.configuration.incomingAnswerCallField2])
+                && event.Channel.includes('SIP/')) {
                     const call = await Call.findOne({
                         where: {
                             pbx_call_id: event.Linkedid
@@ -172,12 +199,15 @@ export class Processor {
                         return;
                     }
     
+                    if (!isNullOrUndefined(call.internal)) {
+                        return;
+                    }
+
                     console.log("Ответ звонка");
     
-                    call.internal = event.CallerIDNum;
+                    call.internal = parseInt(event.CallerIDNum).toString();
                     call.call_answer = new Date();
                     await call.save();
-                    console.log(call);
                     let userField = new Object();
                     userField['status'] = 'call_started';
                     let callParam = new Object();
@@ -185,7 +215,7 @@ export class Processor {
                     let pbxCallIdField = new Object();
                     pbxCallIdField['call_session_id'] = this.reverseString(event.Linkedid.replace(/\D/g, '')).substring(0, 7);
                     Object.assign(callParam['call'], pbxCallIdField);
-                    let responsible = { id: 7 };
+                    let responsible = { id: call.internal };
                     let responsiblesField = new Object();
                     responsiblesField['responsibles'] = [responsible];
                     Object.assign(callParam['call'], responsiblesField);
@@ -207,8 +237,9 @@ export class Processor {
                                 ;
                         })
                 }
-                break;
-            }
+        }
+
+        switch(event.Event) {
             case 'VarSet': {
 
                 if (event.Linkedid === undefined) {
@@ -230,13 +261,10 @@ export class Processor {
                     pbx_call_id: event.Linkedid
                 });
 
-                if (event.Variable === '__FROM_DID') {
-                    call.responsibles = event.Value;
-                    await call.save();
-                }
-
                 if (event.Variable === 'MIXMONITOR_FILENAME') {
-                    call.call_filename = event.Value;
+                    const file_link = event.Value.replace('/var/spool/asterisk', `https://${this.configuration.AMI_server}/CRM`).replace('.wav', '.mp3');
+                    
+                    call.call_filename = file_link;
                     await call.save();
     
                     let userField = new Object();
@@ -246,7 +274,6 @@ export class Processor {
                     let pbxCallIdField = new Object();
                     pbxCallIdField['call_session_id'] = this.reverseString(event.Linkedid.replace(/\D/g, '')).substring(0, 7);
                     Object.assign(callParam['call'], pbxCallIdField);
-                    let file_link = event.Value.replace('/var/spool/asterisk', `https://${this.configuration.AMI_server}/CRM`).replace('.wav', '.mp3');
                     let fileLinkField = new Object();
                     fileLinkField['file_link'] = file_link;
                     Object.assign(callParam['call'], fileLinkField);
