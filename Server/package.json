@@ -6,8 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "nodemon --config \"./nodemon.json\"/",
-    "build": "rm -rf ./dist/ && tsc",
-    "start": "node dist/Server/start.js"
+    "build": "tsc",
+    "start": "NODE_ENV=production node dist/Server/start.js",
+    "postbuild": "mkdir -p ./dist/Server/config && cp 'config/config.json' ./dist/Server/config/ && mkdir -p ./dist/Server/public && cp public/* ./dist/Server/public/",
+    "deploy": "npm run build && cp -avr ./dist/Server ~/apps/Operware",
+    "install": "sh install.sh"
   },
   "author": "Mikhail Gerasimov",
   "license": "ISC",

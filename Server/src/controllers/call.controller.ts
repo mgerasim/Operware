@@ -4,6 +4,7 @@ import { Controller, Middleware, Get, Put, Post, Delete } from '@overnightjs/cor
 import { Logger } from '@overnightjs/logger';
 import { Configuration } from '../models/configuration';
 import { Call } from '../models/call';
+import { Variable } from '../models/variable';
 
 
 @Controller('api/calls')
@@ -11,10 +12,27 @@ export class CallController  {
     @Get()
     private getCalls(req: Request, res: Response) {
         Logger.Info(req.params.msg);
-        Call.findAll().then(calls => {
+        Call.findAll({
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        }).then(calls => {
             res.status(200).json(calls);
         }).catch(err => {
             Logger.Err(err.message);
+        });
+    }
+    @Get(':pbxCallId/variables')
+    private getVariablesByCall(req: Request, res: Response) {
+        Logger.Info(req.params.pbxCallId);
+        Variable.findAll({
+            where: {
+                pbx_call_id: req.params.pbxCallId
+            }
+        }).then(variables => {
+            res.status(200).json(variables);
+        }).catch(err => {
+            res.status(500).json(err);
         });
     }
 }

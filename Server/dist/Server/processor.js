@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-const logger_1 = require("@overnightjs/logger");
 const call_1 = require("./models/call");
+const variable_1 = require("./models/variable");
 const axios = require('axios');
 class Processor {
     constructor(configuration) {
@@ -10,8 +10,6 @@ class Processor {
     }
     eventHandle(event) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            console.log(event);
-            logger_1.Logger.Info(event);
             switch (event.Event) {
                 // AMI событие привязки входящего звонка
                 case this.configuration.incomingStartCallEvent: {
@@ -172,18 +170,24 @@ class Processor {
                     break;
                 }
                 case 'VarSet': {
+                    console.log(`${event.Variable} = ${event.Value}`);
                     if (event.Linkedid === undefined) {
                         return;
                     }
-                    if (event.Variable == 'MIXMONITOR_FILENAME') {
-                        const call = yield call_1.Call.findOne({
-                            where: {
-                                pbx_call_id: event.Linkedid
-                            }
-                        });
-                        if (call === undefined || call === null) {
-                            return;
+                    const call = yield call_1.Call.findOne({
+                        where: {
+                            pbx_call_id: event.Linkedid
                         }
+                    });
+                    if (call === undefined || call === null) {
+                        return;
+                    }
+                    const variable = yield variable_1.Variable.create({
+                        title: event.Variable,
+                        value: event.Value,
+                        pbx_call_id: event.Linkedid
+                    });
+                    if (event.Variable == 'MIXMONITOR_FILENAME') {
                         console.log(`${event.Variable} = ${event.Value}`);
                         call.call_filename = event.Value;
                         yield call.save();

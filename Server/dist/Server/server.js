@@ -6,11 +6,12 @@ const express = require("express");
 const morgan = require("morgan");
 const core_1 = require("@overnightjs/core");
 const logger_1 = require("@overnightjs/logger");
-const sequelize_typescript_1 = require("sequelize-typescript");
 const configuration_1 = require("./models/configuration");
 const processor_1 = require("./processor");
 const call_1 = require("./models/call");
+const variable_1 = require("./models/variable");
 const AmiClient = require('asterisk-ami-client');
+const sequelize = require('./databaseProvider');
 class ExampleServer extends core_1.Server {
     constructor() {
         super(true);
@@ -44,6 +45,9 @@ class ExampleServer extends core_1.Server {
                 this.processor = new processor_1.Processor(configuration);
                 client
                     .on('Dial', event => {
+                    this.processor.eventHandle(event);
+                })
+                    .on('VarSet', event => {
                     this.processor.eventHandle(event);
                 })
                     .on('Hangup', event => {
@@ -111,10 +115,11 @@ class ExampleServer extends core_1.Server {
         });
     }
     setupDatabaseProvider() {
-        const sequelize = new sequelize_typescript_1.Sequelize('mysql://root:nFsBcwTm7iQgE4X10s85@127.0.0.1/Operware_development');
+        // const sequelize = new Sequelize('mysql://root:nFsBcwTm7iQgE4X10s85@127.0.0.1/Operware_development');
         sequelize.addModels([
             configuration_1.Configuration,
-            call_1.Call
+            call_1.Call,
+            variable_1.Variable
         ]);
         sequelize.sync();
     }

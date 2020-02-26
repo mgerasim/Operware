@@ -3,4 +3,5 @@ import ExampleServer from './server';
 
 
 const exampleServer = new ExampleServer();
-exampleServer.start(3000);
+const port = parseInt(process.env.PORT, 3000) || 8080;
+exampleServer.start(port);

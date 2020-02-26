@@ -8,7 +8,9 @@ import { Sequelize } from 'sequelize-typescript';
 import { Configuration } from './models/configuration'
 import { Processor } from './processor';
 import { Call } from './models/call';
+import { Variable } from './models/variable';
 const AmiClient = require('asterisk-ami-client');
+const sequelize = require('./databaseProvider')
 
 class ExampleServer extends Server {
 
@@ -44,11 +46,19 @@ class ExampleServer extends Server {
         });
         Configuration.findAll().then(configurations => {
             const configuration = configurations[0];
-            client.connect('avancrm', 'JD3clEB8_f23r-3ry84gJ', { host: 'avantelecom.avantele.com', port: 5038 })
+            client.connect(configuration.AMI_username, 
+                configuration.AMI_password, 
+                { 
+                    host: configuration.AMI_server, 
+                    port: configuration.AMI_port 
+                })
                 .then(() => {
                     this.processor = new Processor(configuration);
                     client
                     .on('Dial', event => {
+                        this.processor.eventHandle(event);
+                    })
+                    .on('VarSet', event => {
                         this.processor.eventHandle(event);
                     })
                     .on('Hangup', event => {
@@ -120,11 +130,13 @@ class ExampleServer extends Server {
 
     private setupDatabaseProvider() {
 
-        const sequelize = new Sequelize('mysql://root:nFsBcwTm7iQgE4X10s85@127.0.0.1/Operware_development');
+        // const sequelize = new Sequelize('mysql://root:nFsBcwTm7iQgE4X10s85@127.0.0.1/Operware_development');
+
 
         sequelize.addModels([
             Configuration,
-            Call
+            Call,
+            Variable
         ]);
         sequelize.sync();
     }
