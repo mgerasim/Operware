@@ -141,14 +141,17 @@ class Processor {
                         Object.assign(callParam['call'], pbxCallIdField);
                         console.log('Формируем массив ответственных');
                         if (util_1.isNullOrUndefined(call.responsibles)) {
-                            call.responsibles = this.configuration.defaultResponsibles;
-                            yield call.save();
+                            call.responsibles = parseInt(this.configuration.defaultResponsibles).toString();
+                            yield call.save;
                         }
                         let responsible = new Array();
                         console.log(call.responsibles);
-                        call.responsibles.split('|').forEach(x => {
-                            responsible.push({ id: parseInt(x) });
-                        });
+                        const length = call.responsibles.split('|').length;
+                        if (length <= 0) {
+                            logger_1.Logger.Imp('responsibles is enabled');
+                            return;
+                        }
+                        responsible.push({ id: parseInt(call.responsibles.split('|')[length - 1]) });
                         console.log(responsible);
                         let responsiblesField = new Object();
                         responsiblesField['responsibles'] = responsible;
