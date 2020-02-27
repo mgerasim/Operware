@@ -48,14 +48,25 @@ export class Processor {
                 let called_phone_number = event.Exten;
                 if (called_phone_number.length === 6) {
                     called_phone_number = '74212' + called_phone_number;
+                } if (called_phone_number.length === 7) {
+                    called_phone_number = '7423' + called_phone_number;
                 } else if (called_phone_number.length === 10) {
                     called_phone_number = '7' + called_phone_number;
+                }
+
+                let caller_id = event.CallerIDNum;
+                if (caller_id.length === 6) {
+                    caller_id = '74212' + caller_id;
+                } if (caller_id.length === 7) {
+                    caller_id = '7423' + caller_id;
+                } else if (caller_id.length === 10) {
+                    caller_id = '7' + caller_id;
                 }
 
                 await Call.create({
                     call_start: new Date(),
                     pbx_call_id: event.Linkedid,
-                    caller_id: event.CallerIDNum,
+                    caller_id: caller_id,
                     called_phone_number: called_phone_number
                 });
 
