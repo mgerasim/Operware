@@ -10,7 +10,7 @@
     "start": "NODE_ENV=production node dist/Server/start.js",
     "postbuild": "mkdir -p ./dist/Server/config && cp 'config/config.json' ./dist/Server/config/ && mkdir -p ./dist/Server/public && cp public/* ./dist/Server/public/",
     "deploy": "npm run build && cp -avr ./dist/Server ~/apps/Operware && cp -avr ./node_modules ~/apps/Operware/Server",
-    "install": "sh install.sh"
+    "install-deploy": "sh install.sh"
   },
   "author": "Mikhail Gerasimov",
   "license": "ISC",
