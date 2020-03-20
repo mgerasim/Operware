@@ -78,7 +78,7 @@ export class Processor {
                 pbxCallIdField['call_session_id'] = this.reverseString(event.Linkedid.replace(/\D/g, '')).substring(0, 7);
                 Object.assign(callParam['call'], pbxCallIdField);
                 let incomingField = new Object();
-                incomingField['contact_phone_number'] = event.CallerIDNum;
+                incomingField['contact_phone_number'] = caller_id;
                 const calledPhoneNumberField = new Object();
                 calledPhoneNumberField['called_phone_number'] = called_phone_number;
                 Object.assign(callParam['call'], incomingField)

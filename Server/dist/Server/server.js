@@ -14,11 +14,15 @@ const variable_1 = require("./models/variable");
 const AmiClient = require('asterisk-ami-client');
 const sequelize = require('./databaseProvider');
 const moment = require("moment");
+const Queue = require('queue-fifo');
+const InfiniteLoop = require('infinite-loop');
 const schedule = require("node-schedule");
 class ExampleServer extends core_1.Server {
     constructor() {
         super(true);
         this.SERVER_STARTED = 'Example server started on port: ';
+        this.queue = new Queue();
+        this.readBufferTask = new InfiniteLoop();
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.setupStatic();
@@ -27,17 +31,29 @@ class ExampleServer extends core_1.Server {
         2;
         this.setupAmiClient();
         this.setupSchedule();
+        this.setupQueue();
+    }
+    setupQueue() {
+        this.readBufferTask.add(() => {
+            if (!this.queue.isEmpty()) {
+                const event = this.queue.dequeue();
+                this.processor.eventHandle(event);
+            }
+        });
+        this.readBufferTask.run();
     }
     setupSchedule() {
         const { Op } = require('sequelize');
         var j = schedule.scheduleJob('2 * * * *', function () {
             console.log('delete');
             console.log(moment().subtract(1, 'hours').toDate());
-            event_1.Event.destroy({ where: {
+            event_1.Event.destroy({
+                where: {
                     createdAt: {
                         [Op.lte]: moment().subtract(1, 'hours').toDate()
                     }
-                } });
+                }
+            });
         });
     }
     setupStatic() {
@@ -64,52 +80,52 @@ class ExampleServer extends core_1.Server {
                 this.processor = new processor_1.Processor(configuration);
                 client
                     .on('Dial', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('VarSet', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('Hangup', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('Hold', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('Bridge', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('BridgeLeave', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('ExtensionStatus', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('Newstate', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('Newchannel', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('NewCallerid', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('Cdr', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('QueueMemberStatus', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('HangupRequest', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('SoftHangupRequest', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('Newexten', event => {
                     this.processor.eventHandle(event);
                 })
                     .on('AgentComplete', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('LINKEDID_END', event => console.log(event))
                     .on('resp_123', response => {
