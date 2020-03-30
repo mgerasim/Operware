@@ -5,6 +5,7 @@ import { Logger } from '@overnightjs/logger';
 import { Configuration } from '../models/configuration';
 import { Call } from '../models/call';
 import { Variable } from '../models/variable';
+import { Event } from '../models/event';
 
 
 @Controller('api/calls')
@@ -31,6 +32,19 @@ export class CallController  {
             }
         }).then(variables => {
             res.status(200).json(variables);
+        }).catch(err => {
+            res.status(500).json(err);
+        });
+    }
+    @Get(':pbxCallId/events')
+    private getEventsByCall(req: Request, res: Response) {
+        Logger.Info(req.params.pbxCallId);
+        Event.findAll({
+            where: {
+                Linkedid: req.params.pbxCallId
+            }
+        }).then(events => {
+            res.status(200).json(events);
         }).catch(err => {
             res.status(500).json(err);
         });

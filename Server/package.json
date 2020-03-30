@@ -9,8 +9,8 @@
     "build": "tsc",
     "start": "NODE_ENV=production node dist/Server/start.js",
     "postbuild": "mkdir -p ./dist/Server/config && cp 'config/config.json' ./dist/Server/config/ && mkdir -p ./dist/Server/public && cp public/* ./dist/Server/public/",
-    "deploy": "npm run build && cp -avr ./dist/Server ~/apps/Operware",
-    "install": "sh install.sh"
+    "deploy": "npm run build && cp -avr ./dist/Server ~/apps/Operware && cp -avr ./node_modules ~/apps/Operware/Server",
+    "install-deploy": "sh install.sh"
   },
   "author": "Mikhail Gerasimov",
   "license": "ISC",
@@ -24,8 +24,12 @@
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
+    "infinite-loop": "^0.2.2",
+    "moment": "^2.24.0",
     "morgan": "^1.9.1",
     "mysql2": "^2.1.0",
+    "node-schedule": "^1.3.2",
+    "queue-fifo": "^0.2.6",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^5.21.5",
     "sequelize-typescript": "^1.1.0"

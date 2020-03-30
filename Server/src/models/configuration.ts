@@ -20,6 +20,9 @@ export class Configuration extends Model<Configuration> {
 
   @Column
   authKey: string;
+  
+  @Column 
+  defaultResponsibles: string;
 
   @Column
   incomingStartCallEvent: string;
