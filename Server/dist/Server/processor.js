@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const logger_1 = require("@overnightjs/logger");
+const configuration_1 = require("./models/configuration");
 const event_1 = require("./models/event");
 const call_1 = require("./models/call");
 const util_1 = require("util");
@@ -20,6 +21,12 @@ class Processor {
             catch (err) {
                 logger_1.Logger.Err(err);
             }
+            const configurations = yield configuration_1.Configuration.findAll();
+            if (util_1.isNullOrUndefined(configurations)) {
+                throw new Error('Не обнаружена конфигурация!');
+            }
+            this.configuration = configurations[0];
+            this.processorVarSet.configuration = configurations[0];
             if (event.Event === 'Newstate'
                 && event.ChannelStateDesc === 'Ringing'
                 && event.Priority === '1'
