@@ -12,4 +12,6 @@ export class Variable extends Model<Variable> {
   })
   @Column
   pbx_call_id: string;
+  @Column
+  response: string;
 }

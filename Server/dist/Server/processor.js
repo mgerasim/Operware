@@ -4,12 +4,13 @@ const tslib_1 = require("tslib");
 const logger_1 = require("@overnightjs/logger");
 const event_1 = require("./models/event");
 const call_1 = require("./models/call");
-const variable_1 = require("./models/variable");
 const util_1 = require("util");
+const processorVarSet_1 = require("./processorVarSet");
 const axios = require('axios');
 class Processor {
     constructor(configuration) {
         this.configuration = configuration;
+        this.processorVarSet = new processorVarSet_1.ProcessorVarSet(configuration);
     }
     eventHandle(event) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -68,6 +69,7 @@ class Processor {
                         caller_id: caller_id,
                         called_phone_number: called_phone_number
                     });
+                    yield this.processorVarSet.eventHandle('CALL_START', '', event.Linkedid);
                     const userField = new Object();
                     userField['status'] = 'incoming_call';
                     const callParam = new Object();
@@ -112,11 +114,13 @@ class Processor {
                     console.log("Завершение звонка");
                     call.call_end = new Date();
                     yield call.save();
+                    yield this.processorVarSet.eventHandle('CALL_END', '', event.Linkedid);
                     if (call.internal !== null) {
                         if (!(call.duration > 0)) {
                             call.duration = Math.round((call.call_end.getTime() - call.call_answer.getTime()) / 1000);
                             yield call.save();
                         }
+                        yield this.processorVarSet.eventHandle('CALL_FINISHED', '', event.Linkedid);
                         let userField = new Object();
                         userField['status'] = 'call_finished';
                         let callParam = new Object();
@@ -145,6 +149,7 @@ class Processor {
                         });
                     }
                     if (call.internal === null) {
+                        yield this.processorVarSet.eventHandle('CALL_LOST', '', event.Linkedid);
                         let userField = new Object();
                         userField['status'] = 'call_lost';
                         let callParam = new Object();
@@ -249,11 +254,7 @@ class Processor {
                     if (call === undefined || call === null) {
                         return;
                     }
-                    const variable = yield variable_1.Variable.create({
-                        title: event.Variable,
-                        value: event.Value,
-                        pbx_call_id: event.Linkedid
-                    });
+                    this.processorVarSet.eventHandle(event.Variable, event.Value, event.Linkedid);
                     if (event.Variable === 'MIXMONITOR_FILENAME') {
                         const file_link = event.Value.replace('/var/spool/asterisk', `https://${this.configuration.AMI_server}/CRM`).replace('.wav', '.mp3');
                         call.call_filename = file_link;

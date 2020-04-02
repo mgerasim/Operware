@@ -5,11 +5,17 @@ import { Call } from './models/call';
 import { Variable } from './models/variable';
 import moment = require('moment');
 import { isNullOrUndefined } from 'util';
+import { ProcessorVarSet } from './processorVarSet';
 
 const axios = require('axios')
 
 export class Processor {
-    constructor(private configuration: Configuration) { }
+    
+    processorVarSet: ProcessorVarSet;
+
+    constructor(private configuration: Configuration) {
+        this.processorVarSet = new ProcessorVarSet(configuration);
+    }
 
     async eventHandle(event: any) {
 
@@ -18,6 +24,14 @@ export class Processor {
         } catch (err) {
             Logger.Err(err);
         }
+
+        const configurations = await Configuration.findAll();
+
+        if (isNullOrUndefined(configurations)) {
+            throw new Error('Не обнаружена конфигурация!');
+        }
+        this.configuration = configurations[0];
+        this.processorVarSet.configuration = configurations[0];
 
         if (event.Event === 'Newstate'
             && event.ChannelStateDesc === 'Ringing'
@@ -70,6 +84,8 @@ export class Processor {
                     called_phone_number: called_phone_number
                 });
 
+                await this.processorVarSet.eventHandle('CALL_START', '', event.Linkedid);
+
                 const userField = new Object();
                 userField['status'] = 'incoming_call';
                 const callParam = new Object();
@@ -117,12 +133,18 @@ export class Processor {
                 console.log("Завершение звонка");
                 call.call_end = new Date();
                 await call.save();
+
+
+                await this.processorVarSet.eventHandle('CALL_END', '', event.Linkedid);
+
                 if (call.internal !== null) {
 
                     if (!(call.duration > 0)) {
                         call.duration = Math.round((call.call_end.getTime() - call.call_answer.getTime()) / 1000);
                         await call.save();
                     }
+
+                    await this.processorVarSet.eventHandle('CALL_FINISHED', '', event.Linkedid);
 
                     let userField = new Object();
                     userField['status'] = 'call_finished';
@@ -154,6 +176,9 @@ export class Processor {
                 }
 
                 if (call.internal === null) {
+
+                    await this.processorVarSet.eventHandle('CALL_LOST', '', event.Linkedid);
+
                     let userField = new Object();
                     userField['status'] = 'call_lost';
                     let callParam = new Object();
@@ -270,11 +295,11 @@ export class Processor {
                     return;
                 }
 
-                const variable = await Variable.create({
-                    title: event.Variable,
-                    value: event.Value,
-                    pbx_call_id: event.Linkedid
-                });
+                this.processorVarSet.eventHandle(
+                    event.Variable,
+                    event.Value,
+                    event.Linkedid
+                );
 
                 if (event.Variable === 'MIXMONITOR_FILENAME') {
                     const file_link = event.Value.replace('/var/spool/asterisk', `https://${this.configuration.AMI_server}/CRM`).replace('.wav', '.mp3');

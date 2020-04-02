@@ -60,4 +60,10 @@ export class Configuration extends Model<Configuration> {
   incomingEndCallValue2: string;
   @Column
   incomingAnswerCallValue2: string;
+
+  @Column
+  callbackTimeout: number;
+
+  @Column
+  callbackContext: string;
 }

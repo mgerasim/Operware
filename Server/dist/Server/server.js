@@ -17,6 +17,8 @@ const moment = require("moment");
 const Queue = require('queue-fifo');
 const InfiniteLoop = require('infinite-loop');
 const schedule = require("node-schedule");
+const configurationVariable_1 = require("./models/configurationVariable");
+const callback_1 = require("./models/callback");
 class ExampleServer extends core_1.Server {
     constructor() {
         super(true);
@@ -32,6 +34,38 @@ class ExampleServer extends core_1.Server {
         this.setupAmiClient();
         this.setupSchedule();
         this.setupQueue();
+        this.setupCallback();
+    }
+    setupCallback() {
+        this.app.use('/callback', (req, res) => {
+            console.log(req.query);
+            const callback = new callback_1.Callback();
+            callback.to = req.query.to;
+            callback.from = req.query.from;
+            callback.save().then(result => {
+                configuration_1.Configuration.findAll().then(configurations => {
+                    const configuration = configurations[0];
+                    this.amiClient.action({
+                        Action: 'Originate',
+                        Channel: callback.from,
+                        Callerid: callback.id,
+                        Timeout: configuration.callbackTimeout * 10000,
+                        Context: configuration.callbackContext,
+                        Exten: callback.to,
+                        Priority: 1,
+                        Async: 'yes'
+                    });
+                    res.status(200).send();
+                })
+                    .error(err => {
+                    console.error(err);
+                    res.status(500).send(err.message);
+                });
+            }, err => {
+                console.error(err);
+                res.status(500).send(err.message);
+            });
+        });
     }
     setupQueue() {
         this.readBufferTask.add(() => {
@@ -60,11 +94,13 @@ class ExampleServer extends core_1.Server {
         this.app.use('/', express.static('public'));
         this.app.use('/events', express.static('public'));
         this.app.use('/calls', express.static('public'));
+        this.app.use('/callbacks', express.static('public'));
+        this.app.use('/configurationVariables', express.static('public'));
         this.app.use('/configuration', express.static('public'));
         this.app.use('/exceptions', express.static('public'));
     }
     setupAmiClient() {
-        const client = new AmiClient({
+        this.amiClient = new AmiClient({
             reconnect: true,
             keepAlive: true,
             emitEventsByTypes: true,
@@ -72,13 +108,13 @@ class ExampleServer extends core_1.Server {
         });
         configuration_1.Configuration.findAll().then(configurations => {
             const configuration = configurations[0];
-            client.connect(configuration.AMI_username, configuration.AMI_password, {
+            this.amiClient.connect(configuration.AMI_username, configuration.AMI_password, {
                 host: configuration.AMI_server,
                 port: configuration.AMI_port
             })
                 .then(() => {
                 this.processor = new processor_1.Processor(configuration);
-                client
+                this.amiClient
                     .on('Dial', event => {
                     this.queue.enqueue(event);
                 })
@@ -134,7 +170,7 @@ class ExampleServer extends core_1.Server {
                     .on('internalError', error => {
                     logger_1.Logger.Err(error);
                 });
-                client.action({
+                this.amiClient.action({
                     Action: 'Ping',
                     ActionID: 123
                 });
@@ -157,7 +193,9 @@ class ExampleServer extends core_1.Server {
             configuration_1.Configuration,
             call_1.Call,
             variable_1.Variable,
-            event_1.Event
+            event_1.Event,
+            configurationVariable_1.ConfigurationVariable,
+            callback_1.Callback
         ]);
         sequelize.sync();
     }
