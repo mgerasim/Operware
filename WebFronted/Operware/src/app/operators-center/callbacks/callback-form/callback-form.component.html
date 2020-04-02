@@ -1,0 +1,23 @@
+<nb-card>
+  <nb-card-body>
+    <dx-form [formData]="callback" colCount="1">
+
+      <dxi-item dataField="from">
+        <dxo-label text="От кого"></dxo-label>
+      </dxi-item>
+
+      <dxi-item dataField="to">
+        <dxo-label text="Кому"></dxo-label>
+      </dxi-item>
+
+    </dx-form>
+
+  </nb-card-body>
+  <nb-card-footer>
+    <dx-button stylingMode="contained"
+               type="success"
+               text="Сохранить"
+               (click)="save_Click()">
+    </dx-button>
+  </nb-card-footer>
+</nb-card>

@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import {OperatorsLayoutComponent} from './operators-layout/operators-layout.component';
 import {CallsComponent} from './calls/calls.component';
 import {EventsComponent} from './calls/events/events.component';
+import {CallbacksComponent} from './callbacks/callbacks.component';
 
 
 const routes: Routes = [
@@ -14,6 +15,9 @@ const routes: Routes = [
       {
         path: ':pbxCallId/events',  component: EventsComponent
       },
+      {
+        path: 'callbacks', component: CallbacksComponent
+      }
     ]
   }
 ];

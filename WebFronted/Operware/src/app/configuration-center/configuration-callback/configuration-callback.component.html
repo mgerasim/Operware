@@ -1,0 +1,23 @@
+<nb-card>
+  <nb-card-body>
+    <dx-form [formData]="configuration" colCount="1">
+
+      <dxi-item dataField="callbackTimeout">
+        <dxo-label text="Время ожидания звонка"></dxo-label>
+      </dxi-item>
+
+      <dxi-item dataField="callbackContext">
+        <dxo-label text="Контекст"></dxo-label>
+      </dxi-item>
+
+    </dx-form>
+
+  </nb-card-body>
+  <nb-card-footer>
+    <dx-button stylingMode="contained"
+               type="success"
+               text="Сохранить"
+               (click)="save()">
+    </dx-button>
+  </nb-card-footer>
+</nb-card>

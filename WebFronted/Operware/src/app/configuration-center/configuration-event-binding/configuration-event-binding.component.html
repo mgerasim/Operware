@@ -1,0 +1,108 @@
+<ng-container *ngIf="configuration">
+  <dx-form [formData]="configuration">
+    <dxi-item itemType="tabbed" [tabPanelOptions]="{ deferRendering: false }">
+      <dxi-tab title="Привязка событий">
+
+        <dxi-item itemType="group">
+          <dxo-col-count-by-screen
+            [xs]="1"
+            [sm]="2"
+            [md]='3'
+            [lg]='3'>
+          </dxo-col-count-by-screen>
+
+
+          <dxi-item itemType="group"  caption="Событие поступления звонка">
+            <dxi-item dataField="incomingStartCallEvent" editorType="dxSelectBox" [editorOptions]="{ dataSource: titleEvents }">
+              <dxo-label text="Событие"></dxo-label>
+            </dxi-item>
+            <dxi-item dataField="incomingStartCallField" editorType="dxSelectBox" [editorOptions]="{ dataSource: titleFields }">
+              <dxo-label text="Поле"></dxo-label>
+            </dxi-item>
+            <dxi-item dataField="incomingStartCallValue">
+              <dxo-label text="Значение"></dxo-label>
+            </dxi-item>
+
+            <dxi-item itemType="group" caption="Дополнительное поле">
+              <dxi-item dataField="incomingStartCallField2" editorType="dxSelectBox" [editorOptions]="{ dataSource: titleFields }">
+                <dxo-label text="Поле"></dxo-label>
+              </dxi-item>
+              <dxi-item dataField="incomingStartCallValue2">
+                <dxo-label text="Значение"></dxo-label>
+              </dxi-item>
+            </dxi-item>
+
+          </dxi-item>
+
+
+          <dxi-item itemType="group" caption="Событие отвеченного звонка">
+            <dxi-item dataField="incomingAnswerCallEvent"  editorType="dxSelectBox" [editorOptions]="{ dataSource: titleEvents }">
+              <dxo-label text="Событие"></dxo-label>
+            </dxi-item>
+            <dxi-item dataField="incomingAnswerCallField" editorType="dxSelectBox" [editorOptions]="{ dataSource: titleFields }">
+              <dxo-label text="Поле"></dxo-label>
+            </dxi-item>
+            <dxi-item dataField="incomingAnswerCallValue">
+              <dxo-label text="Значение"></dxo-label>
+            </dxi-item>
+
+            <dxi-item itemType="group" caption="Дополнительное поле">
+              <dxi-item dataField="incomingAnswerCallField2" editorType="dxSelectBox" [editorOptions]="{ dataSource: titleFields }">
+                <dxo-label text="Поле"></dxo-label>
+              </dxi-item>
+              <dxi-item dataField="incomingAnswerCallValue2">
+                <dxo-label text="Значение"></dxo-label>
+              </dxi-item>
+            </dxi-item>
+
+
+          </dxi-item>
+
+          <dxi-item itemType="group" caption="Событие завершения звонка">
+            <dxi-item dataField="incomingEndCallEvent" editorType="dxSelectBox" [editorOptions]="{ dataSource: titleEvents}">
+              <dxo-label text="Событие"></dxo-label>
+            </dxi-item>
+            <dxi-item dataField="incomingEndCallField" editorType="dxSelectBox" [editorOptions]="{ dataSource: titleFields }">
+              <dxo-label text="Поле"></dxo-label>
+            </dxi-item>
+            <dxi-item dataField="incomingEndCallValue">
+              <dxo-label text="Значение"></dxo-label>
+            </dxi-item>
+
+            <dxi-item itemType="group" caption="Дополнительное поле">
+              <dxi-item dataField="incomingEndCallField2" editorType="dxSelectBox" [editorOptions]="{ dataSource: titleFields }">
+                <dxo-label text="Поле"></dxo-label>
+              </dxi-item>
+              <dxi-item dataField="incomingEndCallValue2">
+                <dxo-label text="Значение"></dxo-label>
+              </dxi-item>
+            </dxi-item>
+
+          </dxi-item>
+
+        </dxi-item>
+
+
+      </dxi-tab>
+    </dxi-item>
+  </dx-form>
+
+  <dx-button
+    text="Сохранить"
+    (onClick)="save()">
+  </dx-button>
+</ng-container>
+
+<h5>Создаваемые переменные по событиям</h5>
+<p>
+  <code>CALL_STARTED</code> - Поступление звонка<br/>
+  <code>CALL_END</code> - Окончание обработки звонка<br/>
+  <code>CALL_LOST</code> - Звонок пропущен<br/>
+  <code>CALL_FINISHED</code> - Завершение разговора<br/>
+</p>
+<p>
+  Данные переменные можно использоватья для привязки действий (HTTP  запросы) и в теле запроса <code>@CALL_STARTED</code>
+</p>
+
+<dx-load-panel [visible]="loadingVisible"
+               shadingColor="rgba(0,0,0,0.3)"></dx-load-panel>

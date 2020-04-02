@@ -2,6 +2,7 @@
               id="gridContainer"
               [dataSource]="calls"
               [showBorders]="true"
+              [masterDetail]="{ enabled: true, template: 'detail' }"
               [allowColumnResizing]="true"
               [allowColumnReordering]="true">
   <dxo-paging [pageSize]="20"></dxo-paging>
@@ -34,4 +35,11 @@
       {{ d.data.pbx_call_id }}
     </a>
   </div>
+
+  <div *dxTemplate="let data of 'detail'">
+    <app-variables [call]="data.data">
+
+    </app-variables>
+  </div>
+
 </dx-data-grid>

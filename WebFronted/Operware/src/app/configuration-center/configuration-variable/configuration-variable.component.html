@@ -1,0 +1,43 @@
+<nb-card>
+  <nb-card-body>
+    <dx-data-grid
+      id="gridContainer"
+      [dataSource]="configurationVariables"
+      [showBorders]="true">
+      <dxo-paging [pageSize]="10"></dxo-paging>
+      <dxo-search-panel [visible]="true"></dxo-search-panel>
+      <dxo-pager
+        [showPageSizeSelector]="true"
+        [allowedPageSizes]="[5, 10, 20]"
+        [showInfo]="true">
+      </dxo-pager>
+
+      <dxi-column dataField="title"></dxi-column>
+      <dxi-column dataField="requestUrl"></dxi-column>
+      <dxi-column dataField="buttonEdit" caption="" width="150" cellTemplate="cellButtonEditTemplate"></dxi-column>
+
+      <div *dxTemplate="let data of 'cellButtonEditTemplate'">
+        <dx-button class="otstup" icon="edit" (click)="edit(data.data)"></dx-button>
+      </div>
+
+    </dx-data-grid>
+  </nb-card-body>
+  <nb-card-footer>
+    <dx-button stylingMode="contained"
+               type="success"
+               text="Добавить"
+               (click)="add()">
+    </dx-button>
+  </nb-card-footer>
+</nb-card>
+
+
+<dx-popup title="Переменная"
+          [(visible)]="popupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <app-configuration-variable-form [configurationVariable]="configurationVariable"
+      (apply)="save($event)">
+
+    </app-configuration-variable-form>
+  </div>
+</dx-popup>

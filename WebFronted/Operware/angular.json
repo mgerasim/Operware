@@ -125,6 +125,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "Operware"
+    }
+  },
+  "defaultProject": "Operware",
+  "cli": {
+    "analytics": "f5665313-32ec-4a14-9d91-a2ba279c98b0"
+  }
 }
