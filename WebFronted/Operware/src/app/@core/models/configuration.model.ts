@@ -27,4 +27,7 @@ export class Configuration {
   incomingStartCallValue2: string;
   incomingEndCallValue2: string;
   incomingAnswerCallValue2: string;
+
+  callbackTimeout: string;
+  callbackContext: string;
 }

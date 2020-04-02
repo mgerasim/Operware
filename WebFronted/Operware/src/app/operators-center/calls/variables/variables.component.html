@@ -1,0 +1,16 @@
+<dx-data-grid
+  id="gridContainer"
+  [dataSource]="variables"
+  [showBorders]="true">
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-search-panel [visible]="true"></dxo-search-panel>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[5, 10, 20]"
+    [showInfo]="true">
+  </dxo-pager>
+
+  <dxi-column dataField="title"></dxi-column>
+  <dxi-column dataField="value"></dxi-column>
+  <dxi-column dataField="pbx_call_id"></dxi-column>
+</dx-data-grid>

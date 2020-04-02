@@ -1,0 +1,28 @@
+<nb-card>
+  <nb-card-body>
+    <dx-data-grid
+      id="gridContainer"
+      [dataSource]="callbacks"
+      [showBorders]="true">
+      <dxo-paging [pageSize]="10"></dxo-paging>
+      <dxo-search-panel [visible]="true"></dxo-search-panel>
+      <dxo-pager
+        [showPageSizeSelector]="true"
+        [allowedPageSizes]="[5, 10, 20]"
+        [showInfo]="true">
+      </dxo-pager>
+
+      <dxi-column dataField="to"></dxi-column>
+      <dxi-column dataField="from"></dxi-column>
+    </dx-data-grid>
+  </nb-card-body>
+</nb-card>
+
+<dx-popup title="Обратный звонок"
+          [(visible)]="popupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <app-callback-form (save)="save($event)">
+
+    </app-callback-form>
+  </div>
+</dx-popup>
