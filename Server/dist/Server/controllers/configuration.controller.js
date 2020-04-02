@@ -4,7 +4,45 @@ const tslib_1 = require("tslib");
 const core_1 = require("@overnightjs/core");
 const logger_1 = require("@overnightjs/logger");
 const configuration_1 = require("../models/configuration");
+const configurationVariable_1 = require("../models/configurationVariable");
 let ConfigurationController = class ConfigurationController {
+    getVariables(req, res) {
+        configurationVariable_1.ConfigurationVariable.findAll({
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        }).then(configurationVariables => {
+            res.status(200).json(configurationVariables);
+        }).catch(err => {
+            logger_1.Logger.Err(err.message);
+        });
+    }
+    postVariables(req, res) {
+        let configurationVariable = new configurationVariable_1.ConfigurationVariable();
+        console.log(req.body);
+        Object.assign(configurationVariable, req.body);
+        configurationVariable.save().then(result => {
+            res.status(200).json({ result: 'ok' });
+        }, err => {
+            res.status(404).send();
+        });
+    }
+    putVariables(req, res) {
+        configurationVariable_1.ConfigurationVariable.findByPk(req.body.id).then(configurationVariable => {
+            Object.assign(configurationVariable, req.body);
+            configurationVariable.save().then(result => {
+                res.status(200).send(configurationVariable);
+            })
+                .error(err => {
+                console.error(err);
+                res.status(500).send(err.message);
+            });
+        })
+            .error(err => {
+            console.error(err);
+            res.status(500).send(err.message);
+        });
+    }
     getConfigurations(req, res) {
         logger_1.Logger.Info(req.params.msg);
         configuration_1.Configuration.findAll().then(configurations => {
@@ -43,6 +81,24 @@ let ConfigurationController = class ConfigurationController {
         */
     }
 };
+tslib_1.__decorate([
+    core_1.Get('variables'),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [Object, Object]),
+    tslib_1.__metadata("design:returntype", void 0)
+], ConfigurationController.prototype, "getVariables", null);
+tslib_1.__decorate([
+    core_1.Post('variables'),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [Object, Object]),
+    tslib_1.__metadata("design:returntype", void 0)
+], ConfigurationController.prototype, "postVariables", null);
+tslib_1.__decorate([
+    core_1.Put('variables'),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [Object, Object]),
+    tslib_1.__metadata("design:returntype", void 0)
+], ConfigurationController.prototype, "putVariables", null);
 tslib_1.__decorate([
     core_1.Get(),
     tslib_1.__metadata("design:type", Function),
