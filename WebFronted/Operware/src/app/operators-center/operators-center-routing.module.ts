@@ -16,6 +16,9 @@ const routes: Routes = [
         path: ':pbxCallId/events',  component: EventsComponent
       },
       {
+        path: 'events', component: EventsComponent
+      },
+      {
         path: 'callbacks', component: CallbacksComponent
       }
     ]

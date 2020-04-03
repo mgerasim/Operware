@@ -39,4 +39,33 @@ export class EventService {
       }
     );
   }
+
+
+  public getAll(observe?: 'body', reportProgress?: boolean): Observable<Event[]>;
+  public getAll(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Event[]>>;
+  public getAll(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Event[]>>;
+  public getAll(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    const headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json',
+      'text/json',
+      'application/xml',
+      'text/xml'
+    ];
+
+    // to determine the Content-Type header
+    const consumes: string[] = [];
+
+    return this.httpClient.get<Event[]>(`/api/events`,
+      {
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
 }

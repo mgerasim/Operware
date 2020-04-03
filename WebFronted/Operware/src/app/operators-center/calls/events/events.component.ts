@@ -23,6 +23,10 @@ export class EventsComponent implements OnInit {
         this.eventService.get(this.pbxCallId).subscribe(events => {
           this.events = events;
         });
+      } else {
+        this.eventService.getAll().subscribe(events => {
+          this.events = events;
+        });
       }
     });
   }
