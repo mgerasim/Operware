@@ -134,6 +134,7 @@ class ExampleServer extends Server {
                     port: configuration.AMI_port
                 })
                 .then(() => {
+                    console.log(`Успешное подсоединение: ${configuration.AMI_server}`);
                     this.processor = new Processor(configuration);
                     this.amiClient
                         .on('Dial', event => {

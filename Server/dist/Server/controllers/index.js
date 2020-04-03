@@ -6,4 +6,5 @@ tslib_1.__exportStar(require("./configuration.controller"), exports);
 tslib_1.__exportStar(require("./call.controller"), exports);
 tslib_1.__exportStar(require("./callback.api.controller"), exports);
 tslib_1.__exportStar(require("./live.controller"), exports);
+tslib_1.__exportStar(require("./event.controller"), exports);
 //# sourceMappingURL=index.js.map
