@@ -13,6 +13,10 @@ export class MenuComponent implements OnInit {
       link: '/calls',
     },
     {
+      title: 'Сообщения',
+      link: '/calls/events',
+    },
+    {
       title: 'Конфигурация',
       expanded: true,
       children: [
