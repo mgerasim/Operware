@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
 const bodyParser = require("body-parser");
 const controllers = require("./controllers");
 const express = require("express");
@@ -16,6 +17,7 @@ const sequelize = require('./databaseProvider');
 const moment = require("moment");
 const Queue = require('queue-fifo');
 const InfiniteLoop = require('infinite-loop');
+const asyncWhile = require("async-while");
 const schedule = require("node-schedule");
 const configurationVariable_1 = require("./models/configurationVariable");
 const callback_1 = require("./models/callback");
@@ -25,6 +27,7 @@ class ExampleServer extends core_1.Server {
         this.SERVER_STARTED = 'Example server started on port: ';
         this.queue = new Queue();
         this.readBufferTask = new InfiniteLoop();
+        this.asyncWhile = new asyncWhile();
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.setupStatic();
@@ -67,14 +70,39 @@ class ExampleServer extends core_1.Server {
             });
         });
     }
-    setupQueue() {
-        this.readBufferTask.add(() => {
+    runEventHandle() {
+        setTimeout(() => tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (!this.queue.isEmpty()) {
                 const event = this.queue.dequeue();
-                this.processor.eventHandle(event);
+                yield this.processor.eventHandle(event);
             }
+            this.runEventHandle();
+        }), 1);
+    }
+    setupQueue() {
+        this.runEventHandle();
+        /*
+        setImmediate(async () => {
+            console.log('start')
+            if (!this.queue.isEmpty()) {
+                const event = this.queue.dequeue();
+                await this.processor.eventHandle(event);
+            }
+        }, 100);
+*/
+        /*
+        this.readBufferTask.add(async () => {
+
+            console.log('start');
+            if (!this.queue.isEmpty()) {
+                const event = this.queue.dequeue();
+                await this.processor.eventHandle(event);
+            }
+
+            console.log('stop');
         });
         this.readBufferTask.run();
+        */
     }
     setupSchedule() {
         const { Op } = require('sequelize');
@@ -159,7 +187,7 @@ class ExampleServer extends core_1.Server {
                     this.queue.enqueue(event);
                 })
                     .on('Newexten', event => {
-                    this.processor.eventHandle(event);
+                    this.queue.enqueue(event);
                 })
                     .on('AgentComplete', event => {
                     this.queue.enqueue(event);

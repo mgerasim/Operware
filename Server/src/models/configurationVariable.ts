@@ -14,4 +14,21 @@ export class ConfigurationVariable extends Model<ConfigurationVariable> {
 
   @Column
   response: number;
+
+  @Column
+  sourceFieldName: string;
+
+  @Column
+  sourceFieldValue: string;
+
+  @Column
+  sourceFieldName2: string;
+
+  @Column
+  sourceFieldValue2: string;
+
+  @Column
+  sourceField: string;
+
+  
 }

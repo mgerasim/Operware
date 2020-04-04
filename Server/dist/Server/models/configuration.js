@@ -112,6 +112,10 @@ tslib_1.__decorate([
     sequelize_typescript_1.Column,
     tslib_1.__metadata("design:type", String)
 ], Configuration.prototype, "callbackContext", void 0);
+tslib_1.__decorate([
+    sequelize_typescript_1.Column,
+    tslib_1.__metadata("design:type", String)
+], Configuration.prototype, "uniqueFieldName", void 0);
 Configuration = tslib_1.__decorate([
     sequelize_typescript_1.Table
 ], Configuration);
