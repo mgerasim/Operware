@@ -13,7 +13,7 @@ export class MenuComponent implements OnInit {
       link: '/calls',
     },
     {
-      title: 'Сообщения',
+      title: 'События',
       link: '/calls/events',
     },
     {

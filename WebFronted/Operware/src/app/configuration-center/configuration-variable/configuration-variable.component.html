@@ -35,9 +35,11 @@
 <dx-popup title="Переменная"
           [(visible)]="popupVisible">
   <div *dxTemplate="let data of 'content'">
-    <app-configuration-variable-form [configurationVariable]="configurationVariable"
-      (apply)="save($event)">
+    <dx-scroll-view>
+      <app-configuration-variable-form [configurationVariable]="configurationVariable"
+        (apply)="save($event)">
 
-    </app-configuration-variable-form>
+      </app-configuration-variable-form>
+    </dx-scroll-view>
   </div>
 </dx-popup>

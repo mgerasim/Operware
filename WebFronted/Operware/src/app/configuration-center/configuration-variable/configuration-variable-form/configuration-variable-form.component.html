@@ -2,16 +2,44 @@
   <nb-card-body>
     <dx-form [formData]="configurationVariable" colCount="1">
 
-      <dxi-item dataField="title">
-        <dxo-label text="Наименование"></dxo-label>
+      <dxi-item itemType='group' caption='Общие настройки'>
+
+        <dxi-item dataField="title">
+          <dxo-label text="Наименование"></dxo-label>
+        </dxi-item>
+
+        <dxi-item dataField="requestUrl">
+          <dxo-label text="Запрос"></dxo-label>
+        </dxi-item>
+
+        <dxi-item dataField="requestBody" editorType="dxTextArea">
+          <dxo-label text="Тело запроса"></dxo-label>
+        </dxi-item>
+
       </dxi-item>
 
-      <dxi-item dataField="requestUrl">
-        <dxo-label text="Запрос"></dxo-label>
-      </dxi-item>
+      <dxi-item itemType='group' caption='Источник'>
 
-      <dxi-item dataField="requestBody" editorType="dxTextArea">
-        <dxo-label text="Тело запроса"></dxo-label>
+        <dxi-item dataField="sourceFieldName">
+          <dxo-label text="Наименование поле"></dxo-label>
+        </dxi-item>
+
+        <dxi-item dataField="sourceFieldValue">
+          <dxo-label text="Значение"></dxo-label>
+        </dxi-item>
+
+        <dxi-item dataField="sourceFieldName2">
+          <dxo-label text="Наименование поле2"></dxo-label>
+        </dxi-item>
+
+        <dxi-item dataField="sourceFieldValue2">
+          <dxo-label text="Значение2"></dxo-label>
+        </dxi-item>
+
+        <dxi-item dataField="sourceField">
+          <dxo-label text="Поле источник"></dxo-label>
+        </dxi-item>
+
       </dxi-item>
 
 
