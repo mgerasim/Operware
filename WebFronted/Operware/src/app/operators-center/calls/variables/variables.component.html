@@ -12,5 +12,17 @@
 
   <dxi-column dataField="title"></dxi-column>
   <dxi-column dataField="value"></dxi-column>
-  <dxi-column dataField="pbx_call_id"></dxi-column>
+  <dxi-column dataField="buttonShow" caption="" width="110" cellTemplate="cellButtonShowTemplate"></dxi-column>
+
+  <div *dxTemplate="let data of 'cellButtonShowTemplate'">
+    <dx-button icon="file" (click)="show(data)"></dx-button>
+  </div>
+
 </dx-data-grid>
+
+<dx-popup title="Подробности"
+          [(visible)]="popupShow">
+  <div *dxTemplate="let data of 'content'">
+    <pre> {{  variable.response }}</pre>
+  </div>
+</dx-popup>

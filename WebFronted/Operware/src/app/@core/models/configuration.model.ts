@@ -30,4 +30,6 @@ export class Configuration {
 
   callbackTimeout: string;
   callbackContext: string;
+
+  uniqueFieldName: string;
 }

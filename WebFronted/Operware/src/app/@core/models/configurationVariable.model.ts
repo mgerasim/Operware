@@ -6,6 +6,11 @@ export class ConfigurationVariable {
   requestUrl: string;
   requestBody: string;
   response: number;
+  sourceFieldName: string;
+  sourceFieldValue: string;
+  sourceFieldName2: string;
+  sourceFieldValue2: string;
+  sourceField: string;
   constructor() {
     this.id = undefined;
   }

@@ -11,6 +11,8 @@ import {Variable} from '../../../@core/models/variable.model';
 export class VariablesComponent implements OnInit {
   @Input() call: Call;
   variables: Variable[];
+  popupShow = false;
+  variable: Variable;
   constructor(private variableService: VariableService) { }
 
   ngOnInit() {
@@ -23,4 +25,9 @@ export class VariablesComponent implements OnInit {
     });
   }
 
+  show(data: any) {
+    console.log(data);
+    this.popupShow = true;
+    this.variable = data.data;
+  }
 }
