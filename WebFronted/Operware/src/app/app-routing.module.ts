@@ -11,6 +11,10 @@ const routes: Routes = [
   {
     path: 'calls',
     loadChildren: () => import('./operators-center/operators-center.module').then(m => m.OperatorsCenterModule)
+  },
+  {
+    path: 'service',
+    loadChildren: () => import('./service-center/service-center.module').then(m => m.ServiceCenterModule)
   }
 ];
 

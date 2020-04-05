@@ -38,4 +38,27 @@ export class CallService {
       }
     );
   }
+
+  public deleteAll() {
+
+      const headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json',
+      'text/json',
+      'application/xml',
+      'text/xml'
+    ];
+
+    // to determine the Content-Type header
+    const consumes: string[] = [];
+
+    this.httpClient.delete(`/api/calls`,
+      {
+        headers: headers
+      }
+    ).subscribe();
+
+  }
 }

@@ -39,6 +39,10 @@ export class MenuComponent implements OnInit {
       ],
     },
     {
+      title: 'Обслуживание',
+      link: '/service',
+    },
+    {
       title: 'Обратные звонки',
       link: '/calls/callbacks',
     }
