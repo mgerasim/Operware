@@ -66,4 +66,7 @@ export class Configuration extends Model<Configuration> {
 
   @Column
   callbackContext: string;
+
+  @Column
+  uniqueFieldName: string; 
 }

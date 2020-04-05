@@ -16,6 +16,7 @@ import * as moment from 'moment';
 
 const Queue = require('queue-fifo');
 const InfiniteLoop = require('infinite-loop');
+const asyncWhile = require("async-while");
 
 import * as schedule from 'node-schedule';
 import { ConfigurationVariable } from './models/configurationVariable';
@@ -30,6 +31,8 @@ class ExampleServer extends Server {
     private queue = new Queue();
 
     private readBufferTask = new InfiniteLoop();
+
+    private asyncWhile = new asyncWhile();
 
     private amiClient: any;
 
@@ -80,14 +83,44 @@ class ExampleServer extends Server {
         });
     }
 
-    private setupQueue() {
-        this.readBufferTask.add(() => {
+    private runEventHandle() {
+        setTimeout(async () => {
             if (!this.queue.isEmpty()) {
                 const event = this.queue.dequeue();
-                this.processor.eventHandle(event);
+                await this.processor.eventHandle(event);
             }
+            this.runEventHandle();
+        }, 1);
+    }
+
+    private setupQueue() {
+
+        this.runEventHandle();
+        
+
+        /*
+        setImmediate(async () => {
+            console.log('start')
+            if (!this.queue.isEmpty()) {
+                const event = this.queue.dequeue();
+                await this.processor.eventHandle(event);
+            }
+        }, 100);
+*/
+
+        /*
+        this.readBufferTask.add(async () => {
+
+            console.log('start');
+            if (!this.queue.isEmpty()) {
+                const event = this.queue.dequeue();
+                await this.processor.eventHandle(event);
+            }
+
+            console.log('stop');
         });
         this.readBufferTask.run();
+        */
     }
 
     private setupSchedule() {
@@ -180,7 +213,7 @@ class ExampleServer extends Server {
                             this.queue.enqueue(event);
                         })
                         .on('Newexten', event => {
-                            this.processor.eventHandle(event);
+                            this.queue.enqueue(event);
                         })
                         .on('AgentComplete', event => {
                             this.queue.enqueue(event);
