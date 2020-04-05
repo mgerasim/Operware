@@ -18,7 +18,9 @@ class Processor {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
                 yield event_1.Event.create(event);
-                // console.log(event);
+                if (event.Event !== 'VarSet') {
+                    console.log(event);
+                }
             }
             catch (err) {
                 console.error('error save event');
@@ -291,7 +293,7 @@ class Processor {
             }
             switch (event.Event) {
                 case 'VarSet': {
-                    if (event.Linkedid === undefined) {
+                    if (event[this.configuration.uniqueFieldName] === undefined) {
                         return;
                     }
                     const call = yield call_1.Call.findOne({

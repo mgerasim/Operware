@@ -22,7 +22,9 @@ export class Processor {
 
         try {
             await Event.create(event);
-           // console.log(event);
+            if (event.Event !== 'VarSet') {
+                console.log(event);
+            }
         } catch (err) {
             console.error('error save event');
             Logger.Err(err);
@@ -334,7 +336,7 @@ export class Processor {
         switch (event.Event) {
             case 'VarSet': {
 
-                if (event.Linkedid === undefined) {
+                if (event[this.configuration.uniqueFieldName] === undefined) {
                     return;
                 }
 
