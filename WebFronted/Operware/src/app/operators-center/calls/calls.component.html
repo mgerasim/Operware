@@ -28,12 +28,16 @@
   <dxi-column dataField="responsibles"></dxi-column>
   <dxi-column dataField="called_phone_number"></dxi-column>
   <dxi-column dataField="duration"></dxi-column>
-  <dxi-column dataField="call_filename"></dxi-column>
+  <dxi-column dataField="call_filename" cellTemplate="pbxCallFileNameCellTemplate"></dxi-column>
 
   <div *dxTemplate="let d of 'pbxCallIdCellTemplate'">
     <a [routerLink]="['/calls/' + d.data.pbx_call_id] + '/events'">
       {{ d.data.pbx_call_id }}
     </a>
+  </div>
+
+  <div *dxTemplate="let d of 'pbxCallFileNameCellTemplate'">
+    <dx-button *ngIf="d.data.call_filename" icon="video" (click)="play(d.data)"></dx-button>
   </div>
 
   <div *dxTemplate="let data of 'detail'">
