@@ -111,7 +111,7 @@ export class Processor {
                     return;
                 }
 
-                let called_phone_number = event.Exten;
+                let called_phone_number = isNullOrUndefined(event.Exten) ? event.CallerIDNum : event.Exten ;
                 if (called_phone_number.length === 6) {
                     called_phone_number = '74212' + called_phone_number;
                 } if (called_phone_number.length === 7) {
