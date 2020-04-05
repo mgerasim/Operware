@@ -145,6 +145,7 @@ class ExampleServer extends Server {
         this.app.use('/events', express.static('public'));
         this.app.use('/service', express.static('public'));
         this.app.use('/calls', express.static('public'));
+        this.app.use('/calls/*', express.static('public'));
         this.app.use('/callbacks', express.static('public'));
         this.app.use('/configurationVariables', express.static('public'));
         this.app.use('/configuration', express.static('public'));
