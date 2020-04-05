@@ -18,4 +18,10 @@ export class CallsComponent implements OnInit {
     });
 }
 
+  async play(data: Call) {
+    const audio = new Audio();
+    audio.src = data.call_filename;
+    audio.load();
+    await audio.play();
+  }
 }
