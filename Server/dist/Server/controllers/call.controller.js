@@ -43,6 +43,22 @@ let CallController = class CallController {
             res.status(500).json(err);
         });
     }
+    deleteCallAll(req, res) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            yield event_1.Event.destroy({
+                where: {},
+                truncate: true
+            });
+            yield variable_1.Variable.destroy({
+                where: {},
+                truncate: true
+            });
+            yield call_1.Call.destroy({
+                where: {},
+                truncate: true
+            });
+        });
+    }
 };
 tslib_1.__decorate([
     core_1.Get(),
@@ -62,6 +78,12 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", [Object, Object]),
     tslib_1.__metadata("design:returntype", void 0)
 ], CallController.prototype, "getEventsByCall", null);
+tslib_1.__decorate([
+    core_1.Delete(),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [Object, Object]),
+    tslib_1.__metadata("design:returntype", Promise)
+], CallController.prototype, "deleteCallAll", null);
 CallController = tslib_1.__decorate([
     core_1.Controller('api/calls')
 ], CallController);

@@ -22,7 +22,9 @@ export class Processor {
 
         try {
             await Event.create(event);
-           // console.log(event);
+            if (event.Event !== 'VarSet') {
+                console.log(event);
+            }
         } catch (err) {
             console.error('error save event');
             Logger.Err(err);
@@ -111,7 +113,7 @@ export class Processor {
                     return;
                 }
 
-                let called_phone_number = event.Exten;
+                let called_phone_number = isNullOrUndefined(event.Exten) ? event.CallerIDNum : event.Exten ;
                 if (called_phone_number.length === 6) {
                     called_phone_number = '74212' + called_phone_number;
                 } if (called_phone_number.length === 7) {
@@ -334,7 +336,7 @@ export class Processor {
         switch (event.Event) {
             case 'VarSet': {
 
-                if (event.Linkedid === undefined) {
+                if (event[this.configuration.uniqueFieldName] === undefined) {
                     return;
                 }
 

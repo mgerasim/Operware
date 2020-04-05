@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "root",
-    "password": "nFsBcwTm7iQgE4X10s85",
+    "username": "avtodialer",
+    "password": "avtodialer",
     "database": "Operware_development",
     "host": "127.0.0.1",
     "dialect": "mysql",
@@ -18,8 +18,8 @@
     "logging": false
   },
   "production": {
-    "username": "root",
-    "password": "nFsBcwTm7iQgE4X10s85",
+    "username": "avtodialer",
+    "password": "avtodialer",
     "database": "Operware_production",
     "host": "127.0.0.1",
     "dialect": "mysql",

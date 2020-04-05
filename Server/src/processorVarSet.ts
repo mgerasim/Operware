@@ -21,8 +21,6 @@ export class ProcessorVarSet {
                 value: value,
                 pbx_call_id: pbxCallId
             });
-
-            console.log(`var save ${title} ${value} ${pbxCallId}`);
         } catch(err) {
             console.error(`error var save ${title} ${value} ${pbxCallId}`);
             return;

@@ -49,6 +49,22 @@ export class CallController  {
             res.status(500).json(err);
         });
     }
+
+    @Delete()
+    private async deleteCallAll(req: Request, res: Response) {
+        await Event.destroy({
+            where: {},
+            truncate: true
+          });
+        await Variable.destroy({
+            where: {},
+            truncate: true
+          });
+        await Call.destroy({
+            where: {},
+            truncate: true
+          });
+    }
 }
 
 
