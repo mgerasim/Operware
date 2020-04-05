@@ -43,5 +43,9 @@ yarn-error.log
 testem.log
 /typings
 
+/config
+
+config.json
+
 # System Files
 Thumbs.db
