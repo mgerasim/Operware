@@ -23,7 +23,7 @@ export class Processor {
         try {
             await Event.create(event);
             if (event.Event !== 'VarSet') {
-                console.log(event);
+//                console.log(event);
             }
         } catch (err) {
             console.error('error save event');
@@ -184,10 +184,14 @@ export class Processor {
                 if (call === undefined || call === null) {
                     return;
                 }
+
+                if (call.call_end !== null) {
+                    return;
+                }
+
                 console.log("Завершение звонка");
                 call.call_end = new Date();
                 await call.save();
-
 
                 await this.processorVarSet.eventHandle('CALL_END', '', event[this.configuration.uniqueFieldName]);
 
