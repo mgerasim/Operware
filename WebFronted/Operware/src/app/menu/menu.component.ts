@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {NbMenuItem} from '@nebular/theme';
+import {ConfigurationService} from '../@core/services/configuration.service';
+import {Configuration} from '../@core/models/configuration.model';
+import {isNullOrUndefined} from "util";
 
 @Component({
   selector: 'app-menu',
@@ -47,9 +50,25 @@ export class MenuComponent implements OnInit {
       link: '/calls/callbacks',
     }
   ];
-  constructor() { }
+
+  configurations: Configuration[];
+  configuration: Configuration;
+  constructor(private configurationService: ConfigurationService) { }
+
+  get isEmptyOrganization(): boolean {
+    return isNullOrUndefined(localStorage.getItem('organization')) || localStorage.getItem('organization') === 'null';
+  }
 
   ngOnInit() {
+    this.configurationService.get().subscribe(configurations => {
+      this.configurations = configurations;
+      if (!this.isEmptyOrganization) {
+        this.configuration = this.configurations.find(x => x.id.toString() === localStorage.getItem('organization'));
+        if (!this.configuration) {
+          localStorage.setItem('organization', null);
+        }
+      }
+    });
   }
 
 }

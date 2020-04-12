@@ -1,2 +1,5 @@
-<nb-menu [items]="items">
+<app-menu-organization [organization]="configuration" [organizations]="configurations">
+
+</app-menu-organization>
+<nb-menu *ngIf="configuration" [items]="items">
 </nb-menu>

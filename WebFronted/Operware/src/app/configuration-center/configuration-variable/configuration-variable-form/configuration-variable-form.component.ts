@@ -15,6 +15,7 @@ export class ConfigurationVariableFormComponent implements OnInit {
   ngOnInit() {
     if (!this.configurationVariable) {
       this.configurationVariable = new ConfigurationVariable();
+      this.configurationVariable.configurationId = parseInt(localStorage.getItem('organization'));
     }
 
   }

@@ -1,0 +1,8 @@
+{
+  "/api/*": {
+    "target": "http://ast12.site:3000",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}

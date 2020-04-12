@@ -1,52 +1,80 @@
 <ng-container *ngIf="configuration">
-  <dx-form [formData]="configuration">
-    <dxi-item itemType="tabbed" [tabPanelOptions]="{ deferRendering: false }">
-      <dxi-tab title="Общие настройки">
+  <nb-card>
+    <nb-card-body>
+      <dx-form [formData]="configuration">
+        <dxi-item itemType="tabbed" [tabPanelOptions]="{ deferRendering: false }">
+          <dxi-tab title="Общие настройки">
 
-        <dxi-item itemType='group' caption='AMI подключение'>
+            <dxi-item dataField="titleOrganization">
+              <dxo-label text="Наименование интеграции"></dxo-label>
+            </dxi-item>
 
-          <dxi-item dataField="AMI_server">
-            <dxo-label text="Сервер"></dxo-label>
-          </dxi-item>
-          <dxi-item dataField="AMI_username">
-            <dxo-label text="Имя пользователя"></dxo-label>
-          </dxi-item>
-          <dxi-item dataField="AMI_password">
-            <dxo-label text="Пароль"></dxo-label>
-          </dxi-item>
-          <dxi-item dataField="AMI_port">
-            <dxo-label text="Порт"></dxo-label>
-          </dxi-item>
+            <dxi-item itemType='group' caption='AMI подключение'>
+
+              <dxi-item dataField="AMI_server">
+                <dxo-label text="Сервер"></dxo-label>
+              </dxi-item>
+              <dxi-item dataField="AMI_username">
+                <dxo-label text="Имя пользователя"></dxo-label>
+              </dxi-item>
+              <dxi-item dataField="AMI_password">
+                <dxo-label text="Пароль"></dxo-label>
+              </dxi-item>
+              <dxi-item dataField="AMI_port">
+                <dxo-label text="Порт"></dxo-label>
+              </dxi-item>
+
+              <dxi-item dataField="state" editorType="dxTextArea" [editorOptions]="{disabled: true, height: '100px' }">
+                <dxo-label text="Состояние"></dxo-label>
+              </dxi-item>
+
+            </dxi-item>
+
+            <dxi-item itemType='group' caption='Интеграция'>
+
+              <dxi-item dataField="authKey">
+                <dxo-label text="Ключ авторизации"></dxo-label>
+              </dxi-item>
+              <dxi-item dataField="baseUrl">
+                <dxo-label text="Базовый адрес"></dxo-label>
+              </dxi-item>
+              <dxi-item dataField="defaultResponsibles">
+                <dxo-label text="Ответственный по умолчанию"></dxo-label>
+              </dxi-item>
+            </dxi-item>
+
+            <dxi-item itemType='group' caption='Другие'>
+
+              <dxi-item dataField="uniqueFieldName">
+                <dxo-label text="Поле уникального идентификатора звонка"></dxo-label>
+              </dxi-item>
+            </dxi-item>
+
+          </dxi-tab>
         </dxi-item>
+      </dx-form>
+    </nb-card-body>
+    <nb-card-footer>
+      <div class="row justify-content-between">
+        <div class="col-4">
+          <dx-button
+            text="Сохранить"
+            (onClick)="save()">
+          </dx-button>
+        </div>
+        <div class="col-4">
+          <dx-button
+            text="Удалить"
+            stylingMode="contained"
+            type="danger"
+            (onClick)="delete()">
+          </dx-button>
+        </div>
+      </div>
+    </nb-card-footer>
+  </nb-card>
 
-        <dxi-item itemType='group' caption='Интеграция'>
 
-          <dxi-item dataField="authKey">
-            <dxo-label text="Ключ авторизации"></dxo-label>
-          </dxi-item>
-          <dxi-item dataField="baseUrl">
-            <dxo-label text="Базовый адрес"></dxo-label>
-          </dxi-item>
-          <dxi-item dataField="defaultResponsibles">
-            <dxo-label text="Ответственный по умолчанию"></dxo-label>
-          </dxi-item>
-        </dxi-item>
-
-        <dxi-item itemType='group' caption='Другие'>
-
-          <dxi-item dataField="uniqueFieldName">
-            <dxo-label text="Поле уникального идентификатора звонка"></dxo-label>
-          </dxi-item>
-        </dxi-item>
-
-      </dxi-tab>
-    </dxi-item>
-  </dx-form>
-
-  <dx-button
-    text="Сохранить"
-    (onClick)="save()">
-  </dx-button>
 </ng-container>
 
 <dx-load-panel [visible]="loadingVisible"

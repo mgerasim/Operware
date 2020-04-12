@@ -1,0 +1,33 @@
+<div ngbDropdown class="d-inline-block">
+  <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>{{title}}</button>
+  <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+    <button ngbDropdownItem (click)="add()">Добавить организацию</button>
+    <div class="dropdown-divider"></div>
+    <button ngbDropdownItem *ngFor="let item of organizations" (click)="change(item)">{{ item.titleOrganization === null ? 'Не указано' : item.titleOrganization }}
+    </button>
+  </div>
+</div>
+
+<dx-popup [title]="'Добавление'"
+          [(visible)]="popupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <nb-card>
+      <nb-card-body>
+        <dx-form [formData]="organization" colCount="1">
+
+            <dxi-item dataField="titleOrganization">
+              <dxo-label text="Наименование организации"></dxo-label>
+            </dxi-item>
+        </dx-form>
+      </nb-card-body>
+      <nb-card-footer>
+        <dx-button stylingMode="contained"
+                   type="success"
+                   text="Сохранить"
+                   (click)="save()">
+        </dx-button>
+      </nb-card-footer>
+    </nb-card>
+
+  </div>
+</dx-popup>
