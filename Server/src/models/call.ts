@@ -1,4 +1,5 @@
-import { Table, Model, Column, Index } from 'sequelize-typescript';
+import { Table, Model, Column, Index, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { Configuration } from './configuration';
 
 @Table
 export class Call extends Model<Call> {
@@ -26,4 +27,15 @@ export class Call extends Model<Call> {
     responsibles: string;
     @Column
     called_phone_number: string;
+
+    @Index({
+      name: 'pbx-call-index',
+      type: 'UNIQUE'
+    })
+    @ForeignKey(() => Configuration)
+    @Column
+    configurationId: number;
+  
+    @BelongsTo(() => Configuration)
+    configuration: Configuration;
 }

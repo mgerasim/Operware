@@ -9,10 +9,13 @@ import { ConfigurationVariable } from '../models/configurationVariable';
 @Controller('api/configuration')
 export class ConfigurationController  {
 
-    @Get('variables')
+    @Get(':id/variables')
     private getVariables(req: Request, res: Response) {
 
         ConfigurationVariable.findAll({
+            where: {
+                configurationId: req.params.id
+            },
             order: [
                 ['createdAt', 'DESC']
             ]
@@ -58,6 +61,21 @@ export class ConfigurationController  {
         });
     }
 
+    @Get(':id')
+    private async getById(req: Request, res: Response) {
+        try {
+            const configuration = await Configuration.findByPk(req.params.id);
+            if (configuration) {
+                res.status(200).send(configuration);
+            } else {
+                res.status(404).send({});
+            }
+        } catch (err) {
+            console.error(err);
+            res.status(500).send(err.message);
+        }
+    }
+
     @Get()
     private getConfigurations(req: Request, res: Response) {
         Logger.Info(req.params.msg);
@@ -66,6 +84,21 @@ export class ConfigurationController  {
         }).catch(err => {
             Logger.Err(err.message);
         });
+    }
+
+    @Post()
+    private async postConfiguration(req: Request, res: Response) {
+        try {
+            const configuration = new Configuration();
+            Object.assign(configuration, req.body);
+            console.log(req.body);
+            await configuration.save();
+            console.log(configuration.id);
+            res.status(200).send(configuration);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send(err.message);
+        }
     }
 
     @Put()

@@ -4,6 +4,9 @@ import {Table, Column, Model, HasMany} from 'sequelize-typescript';
 export class Configuration extends Model<Configuration> {
  
   @Column
+  titleOrganization: string;
+
+  @Column
   AMI_username: string;
  
   @Column
