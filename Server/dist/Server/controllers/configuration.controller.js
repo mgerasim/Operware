@@ -5,6 +5,8 @@ const core_1 = require("@overnightjs/core");
 const logger_1 = require("@overnightjs/logger");
 const configuration_1 = require("../models/configuration");
 const configurationVariable_1 = require("../models/configurationVariable");
+const call_1 = require("../models/call");
+const event_1 = require("../models/event");
 let ConfigurationController = class ConfigurationController {
     getVariables(req, res) {
         configurationVariable_1.ConfigurationVariable.findAll({
@@ -44,6 +46,38 @@ let ConfigurationController = class ConfigurationController {
             .error(err => {
             console.error(err);
             res.status(500).send(err.message);
+        });
+    }
+    deleteConfiguration(req, res) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                console.log(req.params.id);
+                yield event_1.Event.destroy({
+                    where: {
+                        configurationId: req.params.id
+                    }
+                });
+                yield call_1.Call.destroy({
+                    where: {
+                        configurationId: req.params.id
+                    }
+                });
+                yield configurationVariable_1.ConfigurationVariable.destroy({
+                    where: {
+                        configurationId: req.params.id
+                    }
+                });
+                yield configuration_1.Configuration.destroy({
+                    where: {
+                        id: req.params.id
+                    }
+                });
+                res.status(200).send({});
+            }
+            catch (e) {
+                console.log(e);
+                res.status(500).send(e.message);
+            }
         });
     }
     getById(req, res) {
@@ -135,6 +169,12 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", [Object, Object]),
     tslib_1.__metadata("design:returntype", void 0)
 ], ConfigurationController.prototype, "putVariables", null);
+tslib_1.__decorate([
+    core_1.Delete(':id'),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [Object, Object]),
+    tslib_1.__metadata("design:returntype", Promise)
+], ConfigurationController.prototype, "deleteConfiguration", null);
 tslib_1.__decorate([
     core_1.Get(':id'),
     tslib_1.__metadata("design:type", Function),

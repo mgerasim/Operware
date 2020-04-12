@@ -21,20 +21,18 @@ const asyncWhile = require("async-while");
 import * as schedule from 'node-schedule';
 import { ConfigurationVariable } from './models/configurationVariable';
 import { Callback } from './models/callback';
+import { ConnectionManager } from './connectionManager';
 
 class ExampleServer extends Server {
 
     private readonly SERVER_STARTED = 'Example server started on port: ';
 
-    private processor: Processor
-
-    private queue = new Queue();
+    private connectionManager = new ConnectionManager();
 
     private readBufferTask = new InfiniteLoop();
 
     private asyncWhile = new asyncWhile();
 
-    private amiClient: any;
 
     constructor() {
         super(true);
@@ -43,7 +41,7 @@ class ExampleServer extends Server {
         this.setupStatic();
         this.setupControllers();
         this.setupDatabaseProvider(); 2
-        this.setupAmiClient();
+        this.setupConnectionManager();
         this.setupSchedule();
         this.setupQueue();
         this.setupCallback();
@@ -56,7 +54,7 @@ class ExampleServer extends Server {
             callback.to = req.query.to;
             callback.from = req.query.from;
             callback.save().then(result => {
-                
+                /*
                 Configuration.findAll().then(configurations => {
                     const configuration = configurations[0];
                     this.amiClient.action({
@@ -75,6 +73,7 @@ class ExampleServer extends Server {
                     console.error(err);
                     res.status(500).send(err.message);
                 });
+                */
 
             }, err => {
                 console.error(err);
@@ -85,42 +84,18 @@ class ExampleServer extends Server {
 
     private runEventHandle() {
         setTimeout(async () => {
-            if (!this.queue.isEmpty()) {
-                const event = this.queue.dequeue();
-                await this.processor.eventHandle(event);
-            }
-            this.runEventHandle();
+            this.connectionManager.connections.forEach(async (connection) => {
+                if (!connection.queue.isEmpty()) {
+                    const event = connection.queue.dequeue();
+                    await connection.processor.eventHandle(event);
+                }
+                this.runEventHandle();
+            })
         }, 1);
     }
 
     private setupQueue() {
-
         this.runEventHandle();
-        
-
-        /*
-        setImmediate(async () => {
-            console.log('start')
-            if (!this.queue.isEmpty()) {
-                const event = this.queue.dequeue();
-                await this.processor.eventHandle(event);
-            }
-        }, 100);
-*/
-
-        /*
-        this.readBufferTask.add(async () => {
-
-            console.log('start');
-            if (!this.queue.isEmpty()) {
-                const event = this.queue.dequeue();
-                await this.processor.eventHandle(event);
-            }
-
-            console.log('stop');
-        });
-        this.readBufferTask.run();
-        */
     }
 
     private setupSchedule() {
@@ -152,98 +127,16 @@ class ExampleServer extends Server {
         this.app.use('/exceptions', express.static('public'));
     }
 
-    private setupAmiClient() {
-
-        this.amiClient = new AmiClient({
-            reconnect: true,
-            keepAlive: true,
-            emitEventsByTypes: true,
-            emitResponsesById: true
-        });
+    private setupConnectionManager() {
         Configuration.findAll().then(configurations => {
-            const configuration = configurations[0];
-            this.amiClient.connect(configuration.AMI_username,
-                configuration.AMI_password,
-                {
-                    host: configuration.AMI_server,
-                    port: configuration.AMI_port
-                })
-                .then(() => {
-                    console.log(`Успешное подсоединение: ${configuration.AMI_server}`);
-                    this.processor = new Processor(configuration);
-                    this.amiClient
-                        .on('Dial', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('VarSet', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('Hangup', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('Hold', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('Bridge', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('BridgeLeave', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('ExtensionStatus', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('Newstate', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('Newchannel', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('NewCallerid', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('Cdr', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('QueueMemberStatus', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('HangupRequest', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('SoftHangupRequest', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('Newexten', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('AgentComplete', event => {
-                            this.queue.enqueue(event);
-                        })
-                        .on('LINKEDID_END', event => console.log(event))
-                        .on('resp_123', response => {
-
-                            // client.disconnect();
-                        })
-                        .on('internalError', error => {
-                            Logger.Err(error);
-                        });
-                    this.amiClient.action({
-                        Action: 'Ping',
-                        ActionID: 123
-                    });
-                })
-                .catch(error => {
-                    console.log('connect ami client error');
-                    Logger.Err(configuration.AMI_server);
-                    Logger.Err(configuration.AMI_username);
-                    Logger.Err(configuration.AMI_password);
-                    Logger.Err(error);
-                });
+            configurations.forEach(configuration => {
+                this.connectionManager.add(configuration);
+            });
         })
-            .catch(err => {
-                Logger.Err(err);
-            })
+        .error(err => {
+            console.error(err);
+        });
+        
     }
 
     private setupDatabaseProvider() {

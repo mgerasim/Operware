@@ -72,4 +72,7 @@ export class Configuration extends Model<Configuration> {
 
   @Column
   uniqueFieldName: string; 
+
+  @Column
+  state: string;
 }

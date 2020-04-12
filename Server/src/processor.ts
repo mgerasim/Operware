@@ -82,6 +82,12 @@ export class Processor {
                 }
         });
 
+        
+        if (this.configuration.id > 1) {
+            return;
+        }
+
+
         if (event.Event === 'Newstate'
             && event.ChannelStateDesc === 'Ringing'
             && event.Priority === '1'

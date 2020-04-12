@@ -9,7 +9,6 @@ const core_1 = require("@overnightjs/core");
 const logger_1 = require("@overnightjs/logger");
 const configuration_1 = require("./models/configuration");
 const event_1 = require("./models/event");
-const processor_1 = require("./processor");
 const call_1 = require("./models/call");
 const variable_1 = require("./models/variable");
 const AmiClient = require('asterisk-ami-client');
@@ -21,11 +20,12 @@ const asyncWhile = require("async-while");
 const schedule = require("node-schedule");
 const configurationVariable_1 = require("./models/configurationVariable");
 const callback_1 = require("./models/callback");
+const connectionManager_1 = require("./connectionManager");
 class ExampleServer extends core_1.Server {
     constructor() {
         super(true);
         this.SERVER_STARTED = 'Example server started on port: ';
-        this.queue = new Queue();
+        this.connectionManager = new connectionManager_1.ConnectionManager();
         this.readBufferTask = new InfiniteLoop();
         this.asyncWhile = new asyncWhile();
         this.app.use(bodyParser.json());
@@ -34,7 +34,7 @@ class ExampleServer extends core_1.Server {
         this.setupControllers();
         this.setupDatabaseProvider();
         2;
-        this.setupAmiClient();
+        this.setupConnectionManager();
         this.setupSchedule();
         this.setupQueue();
         this.setupCallback();
@@ -46,7 +46,8 @@ class ExampleServer extends core_1.Server {
             callback.to = req.query.to;
             callback.from = req.query.from;
             callback.save().then(result => {
-                configuration_1.Configuration.findAll().then(configurations => {
+                /*
+                Configuration.findAll().then(configurations => {
                     const configuration = configurations[0];
                     this.amiClient.action({
                         Action: 'Originate',
@@ -60,10 +61,11 @@ class ExampleServer extends core_1.Server {
                     });
                     res.status(200).send();
                 })
-                    .error(err => {
+                .error(err => {
                     console.error(err);
                     res.status(500).send(err.message);
                 });
+                */
             }, err => {
                 console.error(err);
                 res.status(500).send(err.message);
@@ -72,37 +74,17 @@ class ExampleServer extends core_1.Server {
     }
     runEventHandle() {
         setTimeout(() => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            if (!this.queue.isEmpty()) {
-                const event = this.queue.dequeue();
-                yield this.processor.eventHandle(event);
-            }
-            this.runEventHandle();
+            this.connectionManager.connections.forEach((connection) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+                if (!connection.queue.isEmpty()) {
+                    const event = connection.queue.dequeue();
+                    yield connection.processor.eventHandle(event);
+                }
+                this.runEventHandle();
+            }));
         }), 1);
     }
     setupQueue() {
         this.runEventHandle();
-        /*
-        setImmediate(async () => {
-            console.log('start')
-            if (!this.queue.isEmpty()) {
-                const event = this.queue.dequeue();
-                await this.processor.eventHandle(event);
-            }
-        }, 100);
-*/
-        /*
-        this.readBufferTask.add(async () => {
-
-            console.log('start');
-            if (!this.queue.isEmpty()) {
-                const event = this.queue.dequeue();
-                await this.processor.eventHandle(event);
-            }
-
-            console.log('stop');
-        });
-        this.readBufferTask.run();
-        */
     }
     setupSchedule() {
         const { Op } = require('sequelize');
@@ -129,93 +111,14 @@ class ExampleServer extends core_1.Server {
         this.app.use('/configuration', express.static('public'));
         this.app.use('/exceptions', express.static('public'));
     }
-    setupAmiClient() {
-        this.amiClient = new AmiClient({
-            reconnect: true,
-            keepAlive: true,
-            emitEventsByTypes: true,
-            emitResponsesById: true
-        });
+    setupConnectionManager() {
         configuration_1.Configuration.findAll().then(configurations => {
-            const configuration = configurations[0];
-            this.amiClient.connect(configuration.AMI_username, configuration.AMI_password, {
-                host: configuration.AMI_server,
-                port: configuration.AMI_port
-            })
-                .then(() => {
-                console.log(`Успешное подсоединение: ${configuration.AMI_server}`);
-                this.processor = new processor_1.Processor(configuration);
-                this.amiClient
-                    .on('Dial', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('VarSet', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('Hangup', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('Hold', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('Bridge', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('BridgeLeave', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('ExtensionStatus', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('Newstate', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('Newchannel', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('NewCallerid', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('Cdr', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('QueueMemberStatus', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('HangupRequest', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('SoftHangupRequest', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('Newexten', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('AgentComplete', event => {
-                    this.queue.enqueue(event);
-                })
-                    .on('LINKEDID_END', event => console.log(event))
-                    .on('resp_123', response => {
-                    // client.disconnect();
-                })
-                    .on('internalError', error => {
-                    logger_1.Logger.Err(error);
-                });
-                this.amiClient.action({
-                    Action: 'Ping',
-                    ActionID: 123
-                });
-            })
-                .catch(error => {
-                console.log('connect ami client error');
-                logger_1.Logger.Err(configuration.AMI_server);
-                logger_1.Logger.Err(configuration.AMI_username);
-                logger_1.Logger.Err(configuration.AMI_password);
-                logger_1.Logger.Err(error);
+            configurations.forEach(configuration => {
+                this.connectionManager.add(configuration);
             });
         })
-            .catch(err => {
-            logger_1.Logger.Err(err);
+            .error(err => {
+            console.error(err);
         });
     }
     setupDatabaseProvider() {

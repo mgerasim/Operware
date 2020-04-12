@@ -4,6 +4,8 @@ import { Controller, Middleware, Get, Put, Post, Delete } from '@overnightjs/cor
 import { Logger } from '@overnightjs/logger';
 import { Configuration } from '../models/configuration';
 import { ConfigurationVariable } from '../models/configurationVariable';
+import { Call } from '../models/call';
+import { Event } from '../models/event';
 
 
 @Controller('api/configuration')
@@ -59,6 +61,39 @@ export class ConfigurationController  {
             console.error(err);
             res.status(500).send(err.message);
         });
+    }
+
+    @Delete(':id')
+    private async deleteConfiguration(req: Request, res: Response) {
+        try {
+            console.log(req.params.id);
+
+            await Event.destroy({
+                where: {
+                    configurationId: req.params.id
+                }
+            });
+
+            await Call.destroy({
+                where: {
+                    configurationId: req.params.id
+                }
+            });
+            await ConfigurationVariable.destroy({
+                where: {
+                    configurationId: req.params.id
+                }
+            });
+            await Configuration.destroy({
+                where: {
+                    id: req.params.id
+                }
+            });
+            res.status(200).send({});
+        } catch (e) {
+            console.log(e);
+            res.status(500).send(e.message);
+        }
     }
 
     @Get(':id')
