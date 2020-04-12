@@ -4,15 +4,20 @@ import { Controller, Middleware, Get, Put, Post, Delete } from '@overnightjs/cor
 import { Logger } from '@overnightjs/logger';
 import { Configuration } from '../models/configuration';
 import { ConfigurationVariable } from '../models/configurationVariable';
+import { Call } from '../models/call';
+import { Event } from '../models/event';
 
 
 @Controller('api/configuration')
 export class ConfigurationController  {
 
-    @Get('variables')
+    @Get(':id/variables')
     private getVariables(req: Request, res: Response) {
 
         ConfigurationVariable.findAll({
+            where: {
+                configurationId: req.params.id
+            },
             order: [
                 ['createdAt', 'DESC']
             ]
@@ -58,6 +63,54 @@ export class ConfigurationController  {
         });
     }
 
+    @Delete(':id')
+    private async deleteConfiguration(req: Request, res: Response) {
+        try {
+            console.log(req.params.id);
+
+            await Event.destroy({
+                where: {
+                    configurationId: req.params.id
+                }
+            });
+
+            await Call.destroy({
+                where: {
+                    configurationId: req.params.id
+                }
+            });
+            await ConfigurationVariable.destroy({
+                where: {
+                    configurationId: req.params.id
+                }
+            });
+            await Configuration.destroy({
+                where: {
+                    id: req.params.id
+                }
+            });
+            res.status(200).send({});
+        } catch (e) {
+            console.log(e);
+            res.status(500).send(e.message);
+        }
+    }
+
+    @Get(':id')
+    private async getById(req: Request, res: Response) {
+        try {
+            const configuration = await Configuration.findByPk(req.params.id);
+            if (configuration) {
+                res.status(200).send(configuration);
+            } else {
+                res.status(404).send({});
+            }
+        } catch (err) {
+            console.error(err);
+            res.status(500).send(err.message);
+        }
+    }
+
     @Get()
     private getConfigurations(req: Request, res: Response) {
         Logger.Info(req.params.msg);
@@ -66,6 +119,21 @@ export class ConfigurationController  {
         }).catch(err => {
             Logger.Err(err.message);
         });
+    }
+
+    @Post()
+    private async postConfiguration(req: Request, res: Response) {
+        try {
+            const configuration = new Configuration();
+            Object.assign(configuration, req.body);
+            console.log(req.body);
+            await configuration.save();
+            console.log(configuration.id);
+            res.status(200).send(configuration);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send(err.message);
+        }
     }
 
     @Put()

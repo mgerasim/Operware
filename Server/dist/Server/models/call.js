@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const sequelize_typescript_1 = require("sequelize-typescript");
+const configuration_1 = require("./configuration");
 let Call = class Call extends sequelize_typescript_1.Model {
 };
 tslib_1.__decorate([
@@ -48,6 +49,19 @@ tslib_1.__decorate([
     sequelize_typescript_1.Column,
     tslib_1.__metadata("design:type", String)
 ], Call.prototype, "called_phone_number", void 0);
+tslib_1.__decorate([
+    sequelize_typescript_1.Index({
+        name: 'pbx-call-index',
+        type: 'UNIQUE'
+    }),
+    sequelize_typescript_1.ForeignKey(() => configuration_1.Configuration),
+    sequelize_typescript_1.Column,
+    tslib_1.__metadata("design:type", Number)
+], Call.prototype, "configurationId", void 0);
+tslib_1.__decorate([
+    sequelize_typescript_1.BelongsTo(() => configuration_1.Configuration),
+    tslib_1.__metadata("design:type", configuration_1.Configuration)
+], Call.prototype, "configuration", void 0);
 Call = tslib_1.__decorate([
     sequelize_typescript_1.Table
 ], Call);

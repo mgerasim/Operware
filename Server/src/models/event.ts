@@ -1,4 +1,5 @@
-import { Table, Model, Column, Index } from 'sequelize-typescript';
+import { Table, Model, Column, Index, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { Configuration } from './configuration';
 
 @Table
 export class Event extends Model<Event> {
@@ -43,4 +44,11 @@ export class Event extends Model<Event> {
   Variable: string;
   @Column  
   Value: string;
+
+  @ForeignKey(() => Configuration)
+  @Column
+  configurationId: number;
+
+  @BelongsTo(() => Configuration)
+  configuration: Configuration;
 }

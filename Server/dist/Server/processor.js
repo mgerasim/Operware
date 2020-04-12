@@ -19,7 +19,7 @@ class Processor {
             try {
                 yield event_1.Event.create(event);
                 if (event.Event !== 'VarSet') {
-                    console.log(event);
+                    //                console.log(event);
                 }
             }
             catch (err) {
@@ -68,6 +68,9 @@ class Processor {
                     }
                 }
             }));
+            if (this.configuration.id > 1) {
+                return;
+            }
             if (event.Event === 'Newstate'
                 && event.ChannelStateDesc === 'Ringing'
                 && event.Priority === '1'
@@ -159,6 +162,9 @@ class Processor {
                         }
                     });
                     if (call === undefined || call === null) {
+                        return;
+                    }
+                    if (call.call_end !== null) {
                         return;
                     }
                     console.log("Завершение звонка");

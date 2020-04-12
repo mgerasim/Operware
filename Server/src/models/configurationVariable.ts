@@ -1,4 +1,5 @@
-import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import {Table, Column, Model, HasMany, ForeignKey, BelongsTo} from 'sequelize-typescript';
+import { Configuration } from './configuration';
  
 @Table
 export class ConfigurationVariable extends Model<ConfigurationVariable> {
@@ -30,5 +31,11 @@ export class ConfigurationVariable extends Model<ConfigurationVariable> {
   @Column
   sourceField: string;
 
+  @ForeignKey(() => Configuration)
+  @Column
+  configurationId: number;
+
+  @BelongsTo(() => Configuration)
+  configuration: Configuration;
   
 }
