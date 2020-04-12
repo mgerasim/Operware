@@ -11,6 +11,7 @@ export class ConfigurationVariable {
   sourceFieldName2: string;
   sourceFieldValue2: string;
   sourceField: string;
+  configurationId: number;
   constructor() {
     this.id = undefined;
   }

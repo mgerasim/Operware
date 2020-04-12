@@ -1,4 +1,6 @@
 export class Configuration {
+  id: number;
+
   createdAt: Date;
   updatedAt: Date;
   AMI_username: string;
@@ -8,6 +10,8 @@ export class Configuration {
   authKey: string;
   baseUrl: string;
   defaultResponsibles: string;
+
+  state: string;
 
   incomingStartCallEvent: string;
   incomingStartCallField: string;
@@ -32,4 +36,5 @@ export class Configuration {
   callbackContext: string;
 
   uniqueFieldName: string;
+  titleOrganization: string;
 }

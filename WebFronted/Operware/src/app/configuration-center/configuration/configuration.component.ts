@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ConfigurationService} from '../../@core/services/configuration.service';
 import {Configuration} from '../../@core/models/configuration.model';
 import notify from 'devextreme/ui/notify';
+import {isNullOrUndefined} from 'util';
 
 @Component({
   selector: 'app-configuration',
@@ -9,41 +10,18 @@ import notify from 'devextreme/ui/notify';
   styleUrls: ['./configuration.component.scss']
 })
 export class ConfigurationComponent implements OnInit {
-  titleEvents: string[] = [
-    'Hangup',
-    'Newstate',
-    'Dial',
-    'Newexten',
-    'NewCallerid',
-    'Newchannel'
-  ];
-  titleFields: string[] = [
-    'Event',
-    'Privilege',
-    'Channel',
-    'ChannelState',
-    'ChannelStateDesc',
-    'CallerIDNum',
-    'CallerIDName',
-    'ConnectedLineNum',
-    'ConnectedLineName',
-    'Language',
-    'AccountCode',
-    'Context',
-    'Exten',
-    'Priority',
-    'Uniqueid',
-    'Linkedid',
-    'Cause'
-  ];
   configuration: Configuration;
   loadingVisible = false;
   constructor(protected configurationService: ConfigurationService) { }
 
   ngOnInit() {
-    this.configurationService.get().subscribe(configurations => {
-      console.log(configurations);
-      this.configuration = configurations[0];
+    const id = localStorage.getItem('organization');
+    if (isNullOrUndefined(id)) {
+      throw new Error('Не указнан идентификатор в хранилище ');
+    }
+    this.configurationService.getById(parseInt(id)).subscribe(configuration => {
+      console.log(configuration);
+      this.configuration = configuration;
     });
   }
 
@@ -52,10 +30,24 @@ export class ConfigurationComponent implements OnInit {
       this.configurationService.save(this.configuration).subscribe(res => {
         notify('Конфигурация успешно обновлена');
         this.loadingVisible = false;
+        location.reload();
       }, error => {
         this.loadingVisible = false;
         notify(error.message, 'error');
         throw new Error(error);
       });
+  }
+
+  async delete() {
+    try {
+      console.log(this.configuration.id);
+      await this.configurationService.delete(this.configuration.id).toPromise();
+      notify('Конфигурация успешна удалена');
+      localStorage.setItem('organization', null);
+      location.reload();
+    } catch (e) {
+      console.error(e.message);
+    }
+
   }
 }

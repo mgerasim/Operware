@@ -12,10 +12,10 @@ export class ConfigurationVariableService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public get(observe?: 'body', reportProgress?: boolean): Observable<ConfigurationVariable[]>;
-  public get(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ConfigurationVariable[]>>;
-  public get(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ConfigurationVariable[]>>;
-  public get(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public get(configurationId: number, observe?: 'body', reportProgress?: boolean): Observable<ConfigurationVariable[]>;
+  public get(configurationId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ConfigurationVariable[]>>;
+  public get(configurationId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ConfigurationVariable[]>>;
+  public get(configurationId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     const headers = this.defaultHeaders;
 
@@ -30,7 +30,7 @@ export class ConfigurationVariableService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.get<ConfigurationVariable[]>(`/api/configuration/variables`,
+    return this.httpClient.get<ConfigurationVariable[]>(`/api/configuration/${configurationId}/variables`,
       {
         headers: headers,
         observe: observe,

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ConfigurationVariable} from '../../@core/models/configurationVariable.model';
 import {ConfigurationVariableService} from '../../@core/services/configurationVariable.service';
+import {isNullOrUndefined} from 'util';
 
 @Component({
   selector: 'app-configuration-variable',
@@ -14,7 +15,11 @@ export class ConfigurationVariableComponent implements OnInit {
   constructor(private configurationVariableService: ConfigurationVariableService) { }
 
   ngOnInit() {
-    this.configurationVariableService.get().subscribe(configurationVariables => {
+    const id = localStorage.getItem('organization');
+    if (isNullOrUndefined(id)) {
+      throw new Error('Не найдена кнфигурация в хранилище');
+    }
+    this.configurationVariableService.get(parseInt(id)).subscribe(configurationVariables => {
       if (configurationVariables === null) {
         return;
       }
@@ -30,6 +35,7 @@ export class ConfigurationVariableComponent implements OnInit {
   save($event: ConfigurationVariable) {
     console.log($event);
     this.popupVisible = false;
+    location.reload();
   }
 
   edit(data: any) {
