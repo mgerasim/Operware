@@ -20,10 +20,10 @@ let CallController = class CallController {
         });
     }
     getVariablesByCall(req, res) {
-        logger_1.Logger.Info(req.params.pbxCallId);
+        logger_1.Logger.Info(req.params.id);
         variable_1.Variable.findAll({
             where: {
-                pbx_call_id: req.params.pbxCallId
+                callId: req.params.id
             }
         }).then(variables => {
             res.status(200).json(variables);
@@ -45,18 +45,38 @@ let CallController = class CallController {
     }
     deleteCallAll(req, res) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            yield event_1.Event.destroy({
-                where: {},
-                truncate: true
-            });
-            yield variable_1.Variable.destroy({
-                where: {},
-                truncate: true
-            });
-            yield call_1.Call.destroy({
-                where: {},
-                truncate: true
-            });
+            try {
+                console.log(req.params.configurationId);
+                const configurationId = req.params.configurationId;
+                yield event_1.Event.destroy({
+                    where: {},
+                    truncate: false
+                });
+                const calls = yield call_1.Call.findAll({
+                    where: {
+                        configurationId
+                    }
+                });
+                calls.forEach((call) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+                    yield variable_1.Variable.destroy({
+                        where: {
+                            callId: call.id
+                        },
+                        truncate: false
+                    });
+                    yield call_1.Call.destroy({
+                        where: {
+                            id: call.id
+                        },
+                        truncate: false
+                    });
+                }));
+                res.status(200).send({});
+            }
+            catch (err) {
+                console.error(err);
+                res.status(500).send(err.message);
+            }
         });
     }
 };
@@ -67,7 +87,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:returntype", void 0)
 ], CallController.prototype, "getCalls", null);
 tslib_1.__decorate([
-    core_1.Get(':pbxCallId/variables'),
+    core_1.Get(':id/variables'),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [Object, Object]),
     tslib_1.__metadata("design:returntype", void 0)
@@ -79,7 +99,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:returntype", void 0)
 ], CallController.prototype, "getEventsByCall", null);
 tslib_1.__decorate([
-    core_1.Delete(),
+    core_1.Delete(':configurationId'),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [Object, Object]),
     tslib_1.__metadata("design:returntype", Promise)

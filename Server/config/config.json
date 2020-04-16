@@ -5,6 +5,12 @@
     "database": "Operware_development",
     "host": "127.0.0.1",
     "dialect": "mysql",
+    "define": {
+      "charset": "utf8",
+      "dialectOptions": {
+        "collate": "utf8_general_ci"
+      }
+    },
     "operatorsAliases": false,
     "logging": false
   },
@@ -14,15 +20,27 @@
     "database": "database_test",
     "host": "127.0.0.1",
     "dialect": "mysql",
+    "define": {
+      "charset": "utf8",
+      "dialectOptions": {
+        "collate": "utf8_general_ci"
+      }
+    },
     "operatorsAliases": false,
     "logging": false
   },
   "production": {
     "username": "avtodialer",
     "password": "avtodialer",
-    "database": "Operware_production",
+    "database": "Integrity_production",
     "host": "127.0.0.1",
     "dialect": "mysql",
+    "define": {
+      "charset": "utf8",
+      "dialectOptions": {
+        "collate": "utf8_general_ci"
+      }
+    },
     "operatorsAliases": 0,
     "logging": false
   }

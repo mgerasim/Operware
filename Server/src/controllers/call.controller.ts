@@ -23,12 +23,12 @@ export class CallController  {
             Logger.Err(err.message);
         });
     }
-    @Get(':pbxCallId/variables')
+    @Get(':id/variables')
     private getVariablesByCall(req: Request, res: Response) {
-        Logger.Info(req.params.pbxCallId);
+        Logger.Info(req.params.id);
         Variable.findAll({
             where: {
-                pbx_call_id: req.params.pbxCallId
+                callId: req.params.id
             }
         }).then(variables => {
             res.status(200).json(variables);
@@ -50,20 +50,47 @@ export class CallController  {
         });
     }
 
-    @Delete()
+    @Delete(':configurationId')
     private async deleteCallAll(req: Request, res: Response) {
+       try {
+        console.log(req.params.configurationId);
+
+        const configurationId = req.params.configurationId;
+
         await Event.destroy({
-            where: {},
-            truncate: true
+            where: {
+            },
+            truncate: false
           });
-        await Variable.destroy({
-            where: {},
-            truncate: true
+
+          const calls = await Call.findAll({
+              where: {
+                  configurationId
+              }
           });
-        await Call.destroy({
-            where: {},
-            truncate: true
+
+          calls.forEach(async (call) => {
+
+            await Variable.destroy({
+                where: {
+                    callId: call.id
+                },
+                truncate: false
+            });
+            await Call.destroy({
+                where: {
+                    id: call.id
+                },
+                truncate: false
+            });
           });
+
+
+          res.status(200).send({});
+       } catch (err) {
+           console.error(err);
+           res.status(500).send(err.message);
+       }
     }
 }
 

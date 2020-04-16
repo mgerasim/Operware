@@ -23,7 +23,7 @@ export class Processor {
         try {
             await Event.create(event);
             if (event.Event !== 'VarSet') {
-//                console.log(event);
+ //               console.log(event);
             }
         } catch (err) {
             console.error('error save event');
@@ -35,15 +35,15 @@ export class Processor {
             return;
         }
 
-        const configurations = await Configuration.findAll();
-
-        if (isNullOrUndefined(configurations)) {
+        if (isNullOrUndefined(this.configuration)) {
             throw new Error('Не обнаружена конфигурация!');
         }
-        this.configuration = configurations[0];
-        this.processorVarSet.configuration = configurations[0];
 
-        const call = await Call.findOne({ where: { pbx_call_id: event[this.configuration.uniqueFieldName] } })
+        let call = await Call.findOne(
+            { 
+                where: 
+                { pbx_call_id: event[this.configuration.uniqueFieldName],
+                configurationId: this.configuration.id } })
 
         if (isNullOrUndefined(call)) {
             try {
@@ -58,33 +58,6 @@ export class Processor {
                 console.error(`error save pbx call id ${event[this.configuration.uniqueFieldName]}`);
                 console.error(err.message);
             }
-        }
-
-        const configurationVariables = await ConfigurationVariable.findAll();
-
-        configurationVariables.forEach(async (configurationVariable) => {
-
-            if (isNullOrUndefined(configurationVariable.sourceFieldValue) || isNullOrUndefined(configurationVariable.sourceFieldValue2)) {
-                return;
-            }
-
-            if (configurationVariable.sourceFieldValue.includes(event[configurationVariable.sourceFieldName])
-                && configurationVariable.sourceFieldValue2.includes(event[configurationVariable.sourceFieldName2]))
-                {
-                    try {
-                        await this.processorVarSet.eventHandle(configurationVariable.title,
-                            event[configurationVariable.sourceField],
-                            event[this.configuration.uniqueFieldName]);  
-                    }  catch (err) {
-                        console.error(`error processorVarSet eventHandle ${configurationVariable.title}`);
-                        console.error(err.message);
-                    }
-                }
-        });
-
-        
-        if (this.configuration.id > 1) {
-            return;
         }
 
 
@@ -111,10 +84,8 @@ export class Processor {
                 && this.configuration.incomingStartCallValue2.includes(event[this.configuration.incomingStartCallField2])) {
 
                     console.log('AMI событие привязки входящего звонка');
-                    console.log(event);
 
-                const call = await Call.findOne({ where: { pbx_call_id: event[this.configuration.uniqueFieldName] } })
-
+                
                 if (call) {
                     return;
                 }
@@ -137,47 +108,60 @@ export class Processor {
                     caller_id = '7' + caller_id;
                 }
 
-                await Call.create({
+                const _callAdded = await Call.create({
                     call_start: new Date(),
                     pbx_call_id: event[this.configuration.uniqueFieldName],
                     caller_id: caller_id,
-                    called_phone_number: called_phone_number
+                    called_phone_number: called_phone_number,
+                    configurationId: this.configuration.id
                 });
 
-                await this.processorVarSet.eventHandle('CALL_START', '', event[this.configuration.uniqueFieldName]);
+                await this.processorVarSet.eventHandle('CALL_START', caller_id, _callAdded);
 
-                const userField = new Object();
-                userField['status'] = 'incoming_call';
-                const callParam = new Object();
-                callParam['call'] = userField;
-                const pbxCallIdField = new Object();
-                pbxCallIdField['call_session_id'] = this.reverseString(event[this.configuration.uniqueFieldName].replace(/\D/g, '')).substring(0, 7);
-                Object.assign(callParam['call'], pbxCallIdField);
-                let incomingField = new Object();
-                incomingField['contact_phone_number'] = caller_id;
-                const calledPhoneNumberField = new Object();
-                calledPhoneNumberField['called_phone_number'] = called_phone_number;
-                Object.assign(callParam['call'], incomingField)
-                Object.assign(callParam['call'], calledPhoneNumberField)
-                console.log('Отправление уведомление о входящем звонке ... ');
-                console.log(callParam);
-                const body = callParam;
-
-                axios.post(`${this.configuration.baseUrl}/api/v2/telephony/common`, body,
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': this.configuration.authKey
-                        }
-                    })
-                    .then(res => {
-                        console.log('Успешно Отправлено уведомление о входящем звонке');
-                    })
-                    .catch((error) => {
-                        // Exception.create({ message: 'Ошибка при отправке уведомление о входящем звонке', stack: error.stack.substring(0, 254) }).then();
-                    })
+                
             }
         }
+
+
+
+        call = await Call.findOne(
+            { 
+                where: 
+                { pbx_call_id: event[this.configuration.uniqueFieldName],
+                configurationId: this.configuration.id } })
+
+
+
+
+
+        const configurationVariables = await ConfigurationVariable.findAll();
+
+        configurationVariables.forEach(async (configurationVariable) => {
+
+            if (isNullOrUndefined(configurationVariable.sourceFieldValue) || isNullOrUndefined(configurationVariable.sourceFieldValue2)) {
+                return;
+            }
+
+            if (configurationVariable.sourceFieldValue.includes(event[configurationVariable.sourceFieldName])
+                && configurationVariable.sourceFieldValue2.includes(event[configurationVariable.sourceFieldName2]))
+                {
+                    try {
+                        await this.processorVarSet.eventHandle(configurationVariable.title,
+                            event[configurationVariable.sourceField],
+                            call);  
+                    }  catch (err) {
+                        console.error(`error processorVarSet eventHandle ${configurationVariable.title}`);
+                        console.error(err.message);
+                    }
+                }
+        });
+
+
+        
+        if (this.configuration.id > 1) {
+            return;
+        }
+        
 
         if (event.Event === this.configuration.incomingEndCallEvent) {
             if (this.configuration.incomingEndCallValue.includes(event[this.configuration.incomingEndCallField])
@@ -210,81 +194,12 @@ export class Processor {
 
                     await this.processorVarSet.eventHandle('CALL_FINISHED', '', event[this.configuration.uniqueFieldName]);
 
-                    let userField = new Object();
-                    userField['status'] = 'call_finished';
-                    let callParam = new Object();
-                    callParam['call'] = userField;
-                    const durationField = new Object();
-                    durationField['duration'] = call.duration;
-                    Object.assign(callParam['call'], durationField);
-                    let pbxCallIdField = new Object();
-                    pbxCallIdField['call_session_id'] = this.reverseString(event[this.configuration.uniqueFieldName].replace(/\D/g, '')).substring(0, 7);
-                    Object.assign(callParam['call'], pbxCallIdField);
-                    console.log('Отправка уведомление о завершении вызова');
-                    console.log(callParam);
-                    axios.post(`${this.configuration.baseUrl}/api/v2/telephony/common`, callParam,
-                        {
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': this.configuration.authKey
-                            }
-                        })
-                        .then(res => {
-                            console.log('Отправлено уведомление о завершении вызова');
-                        })
-                        .catch((error) => {
-                            console.log('Ошибка Отправлено уведомление о завершении вызова');
-                            //   Exception.create({ message: 'Ошибка при отправке уведомление о завершении вызова', stack: error.stack.substring(0, 254) }).then()
-                            ;
-                        })
+                    
                 }
 
                 if (call.internal === null) {
 
                     await this.processorVarSet.eventHandle('CALL_LOST', '', event[this.configuration.uniqueFieldName]);
-
-                    let userField = new Object();
-                    userField['status'] = 'call_lost';
-                    let callParam = new Object();
-                    callParam['call'] = userField;
-                    let pbxCallIdField = new Object();
-                    pbxCallIdField['call_session_id'] = this.reverseString(event[this.configuration.uniqueFieldName].replace(/\D/g, '')).substring(0, 7);
-                    Object.assign(callParam['call'], pbxCallIdField);
-                    console.log('Формируем массив ответственных');
-                    if (isNullOrUndefined(call.responsibles)) {
-                        call.responsibles = parseInt(this.configuration.defaultResponsibles).toString();
-                        await call.save;
-                    }
-                    let responsible = new Array<{ id: number }>();
-                    console.log(call.responsibles)
-                    const length = call.responsibles.split('|').length;
-                    if (length <= 0) {
-                        Logger.Imp('responsibles is enabled');
-                        return;
-                    }
-                    responsible.push({ id: parseInt(call.responsibles.split('|')[length - 1]) });
-
-                    console.log(responsible);
-                    let responsiblesField = new Object();
-                    responsiblesField['responsibles'] = responsible;
-                    Object.assign(callParam['call'], responsiblesField);
-                    console.log('Отправка уведомление о пропущенном вызове');
-                    console.log(JSON.stringify(callParam));
-                    axios.post(`${this.configuration.baseUrl}/api/v2/telephony/common`, callParam,
-                        {
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': this.configuration.authKey
-                            }
-                        })
-                        .then(res => {
-                            console.log('Отправлено уведомление о пропущенном вызове');
-                        })
-                        .catch((error) => {
-                            console.log(error.stack);
-                            //Exception.create({ message: 'Ошибка при отправке уведомления о пропущенном вызове', stack: error.stack.substring(0, 254) }).then()
-                            ;
-                        })
                 }
             }
         }
@@ -309,52 +224,12 @@ export class Processor {
 
                 console.log("Ответ звонка");
 
-                call.internal = parseInt(event.CallerIDNum).toString();
-                call.call_answer = new Date();
-                await call.save();
-                let userField = new Object();
-                userField['status'] = 'call_started';
-                let callParam = new Object();
-                callParam['call'] = userField;
-                let pbxCallIdField = new Object();
-                pbxCallIdField['call_session_id'] = this.reverseString(event[this.configuration.uniqueFieldName].replace(/\D/g, '')).substring(0, 7);
-                Object.assign(callParam['call'], pbxCallIdField);
-                let responsible = { id: call.internal };
-                let responsiblesField = new Object();
-                responsiblesField['responsibles'] = [responsible];
-                Object.assign(callParam['call'], responsiblesField);
-                console.log('Отправка разговор начат');
-                console.log(JSON.stringify(callParam));
-                axios.post(`${this.configuration.baseUrl}/api/v2/telephony/common`, callParam,
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': this.configuration.authKey
-                        }
-                    })
-                    .then(res => {
-                        console.log('Отправлено Отправка разговор начат');
-                    })
-                    .catch((error) => {
-                        console.log(error.stack);
-                        // Exception.create({ message: 'Ошибка при Отправка разговор начат', stack: error.stack.substring(0, 254) }).then()
-                        ;
-                    })
             }
         }
 
         switch (event.Event) {
             case 'VarSet': {
 
-                if (event[this.configuration.uniqueFieldName] === undefined) {
-                    return;
-                }
-
-                const call = await Call.findOne({
-                    where: {
-                        pbx_call_id: event[this.configuration.uniqueFieldName]
-                    }
-                });
                 if (call === undefined || call === null) {
                     return;
                 }
@@ -362,7 +237,7 @@ export class Processor {
                 this.processorVarSet.eventHandle(
                     event.Variable,
                     event.Value,
-                    event[this.configuration.uniqueFieldName]
+                    call
                 );
 
                 if (event.Variable === 'MIXMONITOR_FILENAME') {
@@ -371,33 +246,6 @@ export class Processor {
                     call.call_filename = file_link;
                     await call.save();
 
-                    let userField = new Object();
-                    userField['status'] = 'call_record_file';
-                    let callParam = new Object();
-                    callParam['call'] = userField;
-                    let pbxCallIdField = new Object();
-                    pbxCallIdField['call_session_id'] = this.reverseString(event[this.configuration.uniqueFieldName].replace(/\D/g, '')).substring(0, 7);
-                    Object.assign(callParam['call'], pbxCallIdField);
-                    let fileLinkField = new Object();
-                    fileLinkField['file_link'] = file_link;
-                    Object.assign(callParam['call'], fileLinkField);
-                    console.log('Отправка ЗАПИСЬ РАЗГОВОРА');
-                    console.log(JSON.stringify(callParam));
-                    axios.post(`${this.configuration.baseUrl}/api/v2/telephony/common`, callParam,
-                        {
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': this.configuration.authKey
-                            }
-                        })
-                        .then(res => {
-                            console.log('Отправлено ЗАПИСЬ РАЗГОВОРА');
-                        })
-                        .catch((error) => {
-                            console.log(error.stack);
-                            //   Exception.create({ message: 'Ошибка при отправке ЗАПИСЬ РАЗГОВОРА', stack: error.stack.substring(0, 254) }).then()
-                            ;
-                        })
 
                 }
                 break;

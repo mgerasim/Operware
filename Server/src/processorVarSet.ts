@@ -6,52 +6,98 @@ import { Variable } from './models/variable';
 import moment = require('moment');
 import { isNullOrUndefined } from 'util';
 import { ConfigurationVariable } from './models/configurationVariable';
+import { any } from 'bluebird';
 
-const axios = require('axios')
+
+import axios, { AxiosResponse } from 'axios';
 
 export class ProcessorVarSet {
     constructor(public configuration: Configuration) { }
 
-    async eventHandle(title: string, value: string, pbxCallId: string) {
+    async eventHandle(title: string, value: string, call: Call) {
         let variable;
 
         try {
             variable = await Variable.create({
                 title: title,
                 value: value,
-                pbx_call_id: pbxCallId
+                callId: call.id 
             });
         } catch(err) {
-            console.error(`error var save ${title} ${value} ${pbxCallId}`);
+            console.error(`error var save ${title} ${value} ${call.id}`);
+            console.error(err.message);
             return;
         }
 
         const configurationVariable = await ConfigurationVariable.findOne({
             where: {
-                title: title
+                title: title,
+                configurationId: this.configuration.id
             }
         });
+
         if (configurationVariable === undefined || configurationVariable === null) {
             return;
         }
+
         if (isNullOrUndefined(configurationVariable.requestUrl)) {
             return;
         }
         if (configurationVariable.requestUrl.length === 0) {
             return;
         }
-        const requestBody = JSON.parse(configurationVariable.requestBody);
+
+        let requestBody = '';
         try {
-            const response = await axios.post(configurationVariable.requestUrl, requestBody, {
+            requestBody = JSON.parse(configurationVariable.requestBody);
+        } catch {
+            requestBody = configurationVariable.requestBody;
+        }
+
+        let requestUrl = configurationVariable.requestUrl;
+
+        const variables = await Variable.findAll({
+            where: {
+                callId: call.id
+            }
+        });
+        
+        variables.forEach(variable => {
+            requestBody = requestBody.replace(`@${variable.title}`, variable.value);
+            requestUrl = requestUrl.replace(`@${variable.title}`, variable.value);
+        });
+        variables.forEach(variable => {
+            requestBody = requestBody.replace(`@${variable.title}`, variable.value);
+            requestUrl = requestUrl.replace(`@${variable.title}`, variable.value);
+        });
+        variables.forEach(variable => {
+            requestBody = requestBody.replace(`@${variable.title}`, variable.value);
+            requestUrl = requestUrl.replace(`@${variable.title}`, variable.value);
+        });
+
+        console.log(requestBody);
+        console.log(requestUrl);
+
+        try {
+
+            const response = await axios.post<any>(requestUrl, requestBody, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'authtoken': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoibWlzaGEiLCJuYW1lIjoibWlzaGEiLCJwYXNzd29yZCI6bnVsbCwiQVBJX1RJTUUiOjE1ODY5MzgxMTd9.1KZFqMqbRMPDJCCWiCF4aiwhlxpJiFdsaJAWdHyOzK4'
+                    
                 }
             });
-            variable.response = response.data.toString().substring(0, 100);
+
+            variable.response = JSON.stringify(response.data).substring(0, 100);
+
+
+            await this.eventHandle(`${variable.title}_200`, variable.response, call);
     
         } catch (err) {
             console.error(`res error: ${err.message}`);
             variable.response = err.message;
+
+            await this.eventHandle(`${variable.title}_ERROR`, variable.response, call);
         }
         await variable.save();
 
