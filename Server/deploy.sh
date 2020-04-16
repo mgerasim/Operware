@@ -7,3 +7,7 @@ git pull origin master
 npm i axios --save
 npm i
 npm run build
+
+sudo systemctl stop Integrity.service
+sudo systemctl start Integrity.service
+sudo systemctl status Integrity.service
