@@ -84,13 +84,22 @@ class ExampleServer extends Server {
 
     private runEventHandle() {
         setTimeout(async () => {
-            this.connectionManager.connections.forEach(async (connection) => {
-                if (!connection.queue.isEmpty()) {
-                    const event = connection.queue.dequeue();
-                    await connection.processor.eventHandle(event);
-                }
+            try {
+                this.connectionManager.connections.forEach(async (connection) => {
+                    if (connection.queue) {
+                        if (!connection.queue.isEmpty()) {
+                            const event = connection.queue.dequeue();
+                            await connection.processor.eventHandle(event);
+                        }
+                    }
+                    
+                });
+            } catch (e) {
+                console.error(e);
+                console.log(this.connectionManager.connections);
+            } finally {
                 this.runEventHandle();
-            })
+            }
         }, 1);
     }
 

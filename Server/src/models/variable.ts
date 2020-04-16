@@ -13,10 +13,10 @@ export class Variable extends Model<Variable> {
   @Column
   response: string;
 
-  @ForeignKey(() => Configuration)
+  @ForeignKey(() => Call)
   @Column
-  configurationId: number;
+  callId: number;
 
-  @BelongsTo(() => Configuration)
-  configuration: Configuration;
+  @BelongsTo(() => Call)
+  call: Call;
 }

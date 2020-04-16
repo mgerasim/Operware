@@ -27,8 +27,6 @@ export class ConnectionManager {
             queue: undefined
         }
 
-        this.connections.push(connection);
-
         amiClient.connect(configuration.AMI_username,
             configuration.AMI_password,
             {
@@ -46,6 +44,10 @@ export class ConnectionManager {
                 }
                 connection.processor = new Processor(configuration);
                 connection.queue = new Queue();
+
+
+                this.connections.push(connection);
+
                 amiClient
                     .on('Dial', event => {
                         connection.queue.enqueue(event);
@@ -110,6 +112,10 @@ export class ConnectionManager {
                     console.error(state);
                     configuration.state = state;
                     configuration.save().then().catch(e => console.error(e.message));
+
+
+                    this.connections.push(connection);
+
                 });
             }
         

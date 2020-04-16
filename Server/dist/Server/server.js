@@ -74,13 +74,23 @@ class ExampleServer extends core_1.Server {
     }
     runEventHandle() {
         setTimeout(() => tslib_1.__awaiter(this, void 0, void 0, function* () {
-            this.connectionManager.connections.forEach((connection) => tslib_1.__awaiter(this, void 0, void 0, function* () {
-                if (!connection.queue.isEmpty()) {
-                    const event = connection.queue.dequeue();
-                    yield connection.processor.eventHandle(event);
-                }
+            try {
+                this.connectionManager.connections.forEach((connection) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+                    if (connection.queue) {
+                        if (!connection.queue.isEmpty()) {
+                            const event = connection.queue.dequeue();
+                            yield connection.processor.eventHandle(event);
+                        }
+                    }
+                }));
+            }
+            catch (e) {
+                console.error(e);
+                console.log(this.connectionManager.connections);
+            }
+            finally {
                 this.runEventHandle();
-            }));
+            }
         }), 1);
     }
     setupQueue() {
