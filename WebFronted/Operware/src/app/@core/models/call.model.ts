@@ -1,4 +1,5 @@
 export class Call {
+  id: number;
   createdAt: Date;
   updatedAt: Date;
   call_start: Date;

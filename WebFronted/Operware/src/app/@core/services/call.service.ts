@@ -39,7 +39,7 @@ export class CallService {
     );
   }
 
-  public deleteAll() {
+  public deleteAll(configurationId: number) {
 
       const headers = this.defaultHeaders;
 
@@ -54,11 +54,11 @@ export class CallService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    this.httpClient.delete(`/api/calls`,
+    return this.httpClient.delete(`/api/calls/${configurationId}`,
       {
         headers: headers
       }
-    ).subscribe();
+    );
 
   }
 }

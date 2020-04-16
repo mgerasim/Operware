@@ -16,7 +16,7 @@ export class VariablesComponent implements OnInit {
   constructor(private variableService: VariableService) { }
 
   ngOnInit() {
-    this.variableService.get(this.call.pbx_call_id).subscribe(variables => {
+    this.variableService.get(this.call.id).subscribe(variables => {
       if (variables === null) {
         return;
       }

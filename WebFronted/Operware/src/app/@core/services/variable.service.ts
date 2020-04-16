@@ -13,10 +13,10 @@ export class VariableService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public get(pbxCallId: string, observe?: 'body', reportProgress?: boolean): Observable<Variable[]>;
-  public get(pbxCallId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Variable[]>>;
-  public get(pbxCallId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Variable[]>>;
-  public get(pbxCallId: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public get(callId: number, observe?: 'body', reportProgress?: boolean): Observable<Variable[]>;
+  public get(callId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Variable[]>>;
+  public get(callId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Variable[]>>;
+  public get(callId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     const headers = this.defaultHeaders;
 
@@ -31,7 +31,7 @@ export class VariableService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.get<Variable[]>(`/api/calls/${pbxCallId}/variables`,
+    return this.httpClient.get<Variable[]>(`/api/calls/${callId}/variables`,
       {
         headers: headers,
         observe: observe,
