@@ -32,7 +32,7 @@
   "production": {
     "username": "avtodialer",
     "password": "avtodialer",
-    "database": "Operware_production",
+    "database": "Integrity_production",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "define": {
