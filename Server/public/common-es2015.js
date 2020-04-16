@@ -38,7 +38,7 @@ class CallService {
             reportProgress: reportProgress
         });
     }
-    deleteAll() {
+    deleteAll(configurationId) {
         const headers = this.defaultHeaders;
         // to determine the Accept header
         const httpHeaderAccepts = [
@@ -49,9 +49,9 @@ class CallService {
         ];
         // to determine the Content-Type header
         const consumes = [];
-        this.httpClient.delete(`/api/calls`, {
+        return this.httpClient.delete(`/api/calls/${configurationId}`, {
             headers: headers
-        }).subscribe();
+        });
     }
 }
 CallService.ɵfac = function CallService_Factory(t) { return new (t || CallService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"])); };

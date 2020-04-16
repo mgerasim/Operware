@@ -488,7 +488,7 @@ ConfigurationEventBindingComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODUL
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "p");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "code");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](5, "CALL_STARTED");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](5, "CALL_START");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](6, " - \u041F\u043E\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u0435 \u0437\u0432\u043E\u043D\u043A\u0430");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](7, "br");
