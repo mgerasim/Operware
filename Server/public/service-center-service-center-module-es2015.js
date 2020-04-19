@@ -12,8 +12,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ServiceCenterRoutingModule", function() { return ServiceCenterRoutingModule; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
-/* harmony import */ var _operators_center_operators_layout_operators_layout_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../operators-center/operators-layout/operators-layout.component */ "./src/app/operators-center/operators-layout/operators-layout.component.ts");
-/* harmony import */ var _service_service_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./service/service.component */ "./src/app/service-center/service/service.component.ts");
+/* harmony import */ var _service_service_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./service/service.component */ "./src/app/service-center/service/service.component.ts");
+/* harmony import */ var _core_layouts_main_layout_main_layout_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../@core/layouts/main-layout/main-layout.component */ "./src/app/@core/layouts/main-layout/main-layout.component.ts");
 
 
 
@@ -22,9 +22,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const routes = [
     {
-        path: '', component: _operators_center_operators_layout_operators_layout_component__WEBPACK_IMPORTED_MODULE_2__["OperatorsLayoutComponent"], children: [
+        path: '', component: _core_layouts_main_layout_main_layout_component__WEBPACK_IMPORTED_MODULE_3__["MainLayoutComponent"], children: [
             {
-                path: '', component: _service_service_component__WEBPACK_IMPORTED_MODULE_3__["ServiceComponent"]
+                path: '', component: _service_service_component__WEBPACK_IMPORTED_MODULE_2__["ServiceComponent"]
             }
         ]
     }

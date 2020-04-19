@@ -1526,43 +1526,43 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var _operators_layout_operators_layout_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
-    /*! ./operators-layout/operators-layout.component */
-    "./src/app/operators-center/operators-layout/operators-layout.component.ts");
-    /* harmony import */
-
-
-    var _calls_calls_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+    var _calls_calls_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
     /*! ./calls/calls.component */
     "./src/app/operators-center/calls/calls.component.ts");
     /* harmony import */
 
 
-    var _calls_events_events_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+    var _calls_events_events_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
     /*! ./calls/events/events.component */
     "./src/app/operators-center/calls/events/events.component.ts");
     /* harmony import */
 
 
-    var _callbacks_callbacks_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+    var _callbacks_callbacks_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
     /*! ./callbacks/callbacks.component */
     "./src/app/operators-center/callbacks/callbacks.component.ts");
+    /* harmony import */
+
+
+    var _core_layouts_main_layout_main_layout_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+    /*! ../@core/layouts/main-layout/main-layout.component */
+    "./src/app/@core/layouts/main-layout/main-layout.component.ts");
 
     var routes = [{
       path: '',
-      component: _operators_layout_operators_layout_component__WEBPACK_IMPORTED_MODULE_2__["OperatorsLayoutComponent"],
+      component: _core_layouts_main_layout_main_layout_component__WEBPACK_IMPORTED_MODULE_5__["MainLayoutComponent"],
       children: [{
         path: '',
-        component: _calls_calls_component__WEBPACK_IMPORTED_MODULE_3__["CallsComponent"]
+        component: _calls_calls_component__WEBPACK_IMPORTED_MODULE_2__["CallsComponent"]
       }, {
         path: ':pbxCallId/events',
-        component: _calls_events_events_component__WEBPACK_IMPORTED_MODULE_4__["EventsComponent"]
+        component: _calls_events_events_component__WEBPACK_IMPORTED_MODULE_3__["EventsComponent"]
       }, {
         path: 'events',
-        component: _calls_events_events_component__WEBPACK_IMPORTED_MODULE_4__["EventsComponent"]
+        component: _calls_events_events_component__WEBPACK_IMPORTED_MODULE_3__["EventsComponent"]
       }, {
         path: 'callbacks',
-        component: _callbacks_callbacks_component__WEBPACK_IMPORTED_MODULE_5__["CallbacksComponent"]
+        component: _callbacks_callbacks_component__WEBPACK_IMPORTED_MODULE_4__["CallbacksComponent"]
       }]
     }];
 
@@ -1719,6 +1719,86 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           imports: [_angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"], _operators_center_routing_module__WEBPACK_IMPORTED_MODULE_2__["OperatorsCenterRoutingModule"], devextreme_angular__WEBPACK_IMPORTED_MODULE_5__["DxDataGridModule"], devextreme_angular__WEBPACK_IMPORTED_MODULE_5__["DxTextBoxModule"], _nebular_theme__WEBPACK_IMPORTED_MODULE_9__["NbCardModule"], devextreme_angular__WEBPACK_IMPORTED_MODULE_5__["DxButtonModule"], devextreme_angular__WEBPACK_IMPORTED_MODULE_5__["DxPopupModule"], devextreme_angular__WEBPACK_IMPORTED_MODULE_5__["DxFormModule"]]
         }]
       }], null, null);
+    })();
+    /***/
+
+  },
+
+  /***/
+  "./src/app/operators-center/operators-layout/operators-layout.component.ts":
+  /*!*********************************************************************************!*\
+    !*** ./src/app/operators-center/operators-layout/operators-layout.component.ts ***!
+    \*********************************************************************************/
+
+  /*! exports provided: OperatorsLayoutComponent */
+
+  /***/
+  function srcAppOperatorsCenterOperatorsLayoutOperatorsLayoutComponentTs(module, __webpack_exports__, __webpack_require__) {
+    "use strict";
+
+    __webpack_require__.r(__webpack_exports__);
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "OperatorsLayoutComponent", function () {
+      return OperatorsLayoutComponent;
+    });
+    /* harmony import */
+
+
+    var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+    /*! @angular/core */
+    "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
+    /* harmony import */
+
+
+    var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+    /*! @angular/router */
+    "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
+
+    var OperatorsLayoutComponent = /*#__PURE__*/function () {
+      function OperatorsLayoutComponent() {
+        _classCallCheck(this, OperatorsLayoutComponent);
+      }
+
+      _createClass(OperatorsLayoutComponent, [{
+        key: "ngOnInit",
+        value: function ngOnInit() {}
+      }]);
+
+      return OperatorsLayoutComponent;
+    }();
+
+    OperatorsLayoutComponent.ɵfac = function OperatorsLayoutComponent_Factory(t) {
+      return new (t || OperatorsLayoutComponent)();
+    };
+
+    OperatorsLayoutComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
+      type: OperatorsLayoutComponent,
+      selectors: [["app-operators-layout"]],
+      decls: 1,
+      vars: 0,
+      template: function OperatorsLayoutComponent_Template(rf, ctx) {
+        if (rf & 1) {
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "router-outlet");
+        }
+      },
+      directives: [_angular_router__WEBPACK_IMPORTED_MODULE_1__["RouterOutlet"]],
+      styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL29wZXJhdG9ycy1jZW50ZXIvb3BlcmF0b3JzLWxheW91dC9vcGVyYXRvcnMtbGF5b3V0LmNvbXBvbmVudC5zY3NzIn0= */"]
+    });
+    /*@__PURE__*/
+
+    (function () {
+      _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](OperatorsLayoutComponent, [{
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
+        args: [{
+          selector: 'app-operators-layout',
+          templateUrl: './operators-layout.component.html',
+          styleUrls: ['./operators-layout.component.scss']
+        }]
+      }], function () {
+        return [];
+      }, null);
     })();
     /***/
 

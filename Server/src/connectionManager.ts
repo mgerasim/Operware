@@ -23,9 +23,11 @@ export class ConnectionManager {
         const connection: {configuration: Configuration, amiClient: any, processor: Processor, queue: any} = {
             configuration: configuration,
             amiClient: amiClient,
-            processor: undefined,
-            queue: undefined
+            processor: new Processor(configuration),
+            queue: new Queue()
         }
+
+        this.connections.push(connection);
 
         amiClient.connect(configuration.AMI_username,
             configuration.AMI_password,
@@ -42,11 +44,6 @@ export class ConnectionManager {
                 } catch (err) {
                     console.error(err);
                 }
-                connection.processor = new Processor(configuration);
-                connection.queue = new Queue();
-
-
-                this.connections.push(connection);
 
                 amiClient
                     .on('Dial', event => {
