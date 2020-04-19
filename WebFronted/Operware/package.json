@@ -14,8 +14,8 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^9.1.0",
-    "@angular/cdk": "^9.2.0",
+    "@angular/animations": "^9.1.2",
+    "@angular/cdk": "^9.2.1",
     "@angular/common": "~9.1.0",
     "@angular/compiler": "~9.1.0",
     "@angular/core": "~9.1.0",
@@ -27,6 +27,7 @@
     "@nebular/eva-icons": "^5.0.0",
     "@nebular/theme": "^5.0.0",
     "@ng-bootstrap/ng-bootstrap": "^6.0.2",
+    "angular-google-recaptcha": "^1.0.3",
     "bootstrap": "^4.4.1",
     "devextreme": "19.2.6",
     "devextreme-angular": "19.2.6",
@@ -35,6 +36,7 @@
     "popper.js": "^1.16.1",
     "rxjs": "~6.5.4",
     "serialize-javascript": "^3.0.0",
+    "ts-md5": "^1.2.7",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
   },
