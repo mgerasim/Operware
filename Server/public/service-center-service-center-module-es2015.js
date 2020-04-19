@@ -123,9 +123,16 @@ class ServiceComponent {
     }
     deleteCallAll() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            if (confirm('Вы действительно хотите удалить все звонки, события и переменные?')) {
-                yield this.callService.deleteAll();
-                devextreme_ui_notify__WEBPACK_IMPORTED_MODULE_2___default()('Операция успешна выполнена!');
+            try {
+                if (confirm('Вы действительно хотите удалить все звонки, события и переменные?')) {
+                    const configurationId = parseInt(localStorage.getItem('organization'));
+                    yield this.callService.deleteAll(configurationId).toPromise();
+                    devextreme_ui_notify__WEBPACK_IMPORTED_MODULE_2___default()('Операция успешна выполнена!');
+                }
+            }
+            catch (err) {
+                console.error(err);
+                devextreme_ui_notify__WEBPACK_IMPORTED_MODULE_2___default()(err.message, 'error');
             }
         });
     }

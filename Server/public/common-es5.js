@@ -63,15 +63,15 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         }
       }, {
         key: "deleteAll",
-        value: function deleteAll() {
+        value: function deleteAll(configurationId) {
           var headers = this.defaultHeaders; // to determine the Accept header
 
           var httpHeaderAccepts = ['application/json', 'text/json', 'application/xml', 'text/xml']; // to determine the Content-Type header
 
           var consumes = [];
-          this.httpClient["delete"]("/api/calls", {
+          return this.httpClient["delete"]("/api/calls/".concat(configurationId), {
             headers: headers
-          }).subscribe();
+          });
         }
       }]);
 

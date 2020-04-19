@@ -160,7 +160,7 @@ class VariableService {
         this.httpClient = httpClient;
         this.defaultHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]();
     }
-    get(pbxCallId, observe = 'body', reportProgress = false) {
+    get(callId, observe = 'body', reportProgress = false) {
         const headers = this.defaultHeaders;
         // to determine the Accept header
         const httpHeaderAccepts = [
@@ -171,7 +171,7 @@ class VariableService {
         ];
         // to determine the Content-Type header
         const consumes = [];
-        return this.httpClient.get(`/api/calls/${pbxCallId}/variables`, {
+        return this.httpClient.get(`/api/calls/${callId}/variables`, {
             headers: headers,
             observe: observe,
             reportProgress: reportProgress
@@ -493,7 +493,7 @@ class CallsComponent {
     }
 }
 CallsComponent.ɵfac = function CallsComponent_Factory(t) { return new (t || CallsComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_core_services_call_service__WEBPACK_IMPORTED_MODULE_2__["CallService"])); };
-CallsComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({ type: CallsComponent, selectors: [["app-calls"]], decls: 1, vars: 1, consts: [["id", "gridContainer", 3, "dataSource", "showBorders", "masterDetail", "allowColumnResizing", "allowColumnReordering", 4, "ngIf"], ["id", "gridContainer", 3, "dataSource", "showBorders", "masterDetail", "allowColumnResizing", "allowColumnReordering"], [3, "pageSize"], [3, "visible"], ["mode", "dragAndDrop", 3, "enabled"], [3, "showPageSizeSelector", "allowedPageSizes", "showInfo"], ["dataField", "createdAt"], ["dataField", "call_start"], ["dataField", "call_answer"], ["dataField", "call_end"], ["dataField", "pbx_call_id", "cellTemplate", "pbxCallIdCellTemplate"], ["dataField", "caller_id"], ["dataField", "internal"], ["dataField", "responsibles"], ["dataField", "called_phone_number"], ["dataField", "duration"], ["dataField", "call_filename", "cellTemplate", "pbxCallFileNameCellTemplate"], [4, "dxTemplate", "dxTemplateOf"], [3, "routerLink"], ["icon", "video", 3, "click", 4, "ngIf"], ["icon", "video", 3, "click"], [3, "call"]], template: function CallsComponent_Template(rf, ctx) { if (rf & 1) {
+CallsComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({ type: CallsComponent, selectors: [["app-calls"]], decls: 1, vars: 1, consts: [["id", "gridContainer", 3, "dataSource", "showBorders", "masterDetail", "allowColumnResizing", "allowColumnReordering", 4, "ngIf"], ["id", "gridContainer", 3, "dataSource", "showBorders", "masterDetail", "allowColumnResizing", "allowColumnReordering"], [3, "pageSize"], [3, "visible"], ["mode", "dragAndDrop", 3, "enabled"], [3, "showPageSizeSelector", "allowedPageSizes", "showInfo"], ["dataField", "id", "caption", "#"], ["dataField", "call_start"], ["dataField", "call_answer"], ["dataField", "call_end"], ["dataField", "pbx_call_id", "cellTemplate", "pbxCallIdCellTemplate"], ["dataField", "caller_id"], ["dataField", "internal"], ["dataField", "responsibles"], ["dataField", "called_phone_number"], ["dataField", "duration"], ["dataField", "call_filename", "cellTemplate", "pbxCallFileNameCellTemplate"], [4, "dxTemplate", "dxTemplateOf"], [3, "routerLink"], ["icon", "video", 3, "click", 4, "ngIf"], ["icon", "video", 3, "click"], [3, "call"]], template: function CallsComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](0, CallsComponent_dx_data_grid_0_Template, 20, 17, "dx-data-grid", 0);
     } if (rf & 2) {
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx.calls);
@@ -662,7 +662,7 @@ class VariablesComponent {
         this.popupShow = false;
     }
     ngOnInit() {
-        this.variableService.get(this.call.pbx_call_id).subscribe(variables => {
+        this.variableService.get(this.call.id).subscribe(variables => {
             if (variables === null) {
                 return;
             }

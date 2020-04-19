@@ -248,27 +248,41 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "deleteCallAll",
         value: function deleteCallAll() {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+            var configurationId;
             return regeneratorRuntime.wrap(function _callee$(_context) {
               while (1) {
                 switch (_context.prev = _context.next) {
                   case 0:
+                    _context.prev = 0;
+
                     if (!confirm('Вы действительно хотите удалить все звонки, события и переменные?')) {
-                      _context.next = 4;
+                      _context.next = 6;
                       break;
                     }
 
-                    _context.next = 3;
-                    return this.callService.deleteAll();
+                    configurationId = parseInt(localStorage.getItem('organization'));
+                    _context.next = 5;
+                    return this.callService.deleteAll(configurationId).toPromise();
 
-                  case 3:
+                  case 5:
                     devextreme_ui_notify__WEBPACK_IMPORTED_MODULE_2___default()('Операция успешна выполнена!');
 
-                  case 4:
+                  case 6:
+                    _context.next = 12;
+                    break;
+
+                  case 8:
+                    _context.prev = 8;
+                    _context.t0 = _context["catch"](0);
+                    console.error(_context.t0);
+                    devextreme_ui_notify__WEBPACK_IMPORTED_MODULE_2___default()(_context.t0.message, 'error');
+
+                  case 12:
                   case "end":
                     return _context.stop();
                 }
               }
-            }, _callee, this);
+            }, _callee, this, [[0, 8]]);
           }));
         }
       }]);
