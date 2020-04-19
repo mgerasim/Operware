@@ -21,7 +21,7 @@ export class Processor {
     async eventHandle(event: any) {
 
         try {
-            await Event.create(event);
+//            await Event.create(event);
             if (event.Event !== 'VarSet') {
  //               console.log(event);
             }

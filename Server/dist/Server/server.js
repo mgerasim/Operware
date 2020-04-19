@@ -121,11 +121,38 @@ class ExampleServer extends core_1.Server {
         this.app.use('/configuration', express.static('public'));
         this.app.use('/exceptions', express.static('public'));
     }
+    setupConfigurationHandle() {
+        this.app.use('/configurations/:id', (req, res) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = parseInt(req.params.id);
+                const configuration = yield configuration_1.Configuration.findByPk(id);
+                if (!configuration) {
+                    throw new Error(`Конфигурация не найдена ${id}`);
+                }
+                console.log(this.connectionManager.connections.map(x => x.configuration.id));
+                console.log(this.connectionManager.connections.length);
+                const connection = this.connectionManager.connections.find(x => x.configuration.id === id);
+                console.log(connection);
+                if (!connection) {
+                    throw new Error(`Подключение не найдена по конфигурации ${id}`);
+                }
+                console.log(req.params);
+                connection.queue.enqueue(req.params);
+                res.status(200).send();
+            }
+            catch (err) {
+                console.error(err.message);
+                res.status(500).send(err.message);
+            }
+        }));
+    }
     setupConnectionManager() {
         configuration_1.Configuration.findAll().then(configurations => {
             configurations.forEach(configuration => {
                 this.connectionManager.add(configuration);
             });
+            console.log(this.connectionManager.connections.find(x => x.configuration.id));
+            this.setupConfigurationHandle();
         })
             .error(err => {
             console.error(err);

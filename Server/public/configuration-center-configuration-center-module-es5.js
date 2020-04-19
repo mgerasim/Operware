@@ -347,49 +347,56 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var _configuration_layout_configuration_layout_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
-    /*! ./configuration-layout/configuration-layout.component */
-    "./src/app/configuration-center/configuration-layout/configuration-layout.component.ts");
-    /* harmony import */
-
-
-    var _configuration_configuration_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+    var _configuration_configuration_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
     /*! ./configuration/configuration.component */
     "./src/app/configuration-center/configuration/configuration.component.ts");
     /* harmony import */
 
 
-    var _configuration_variable_configuration_variable_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+    var _configuration_variable_configuration_variable_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
     /*! ./configuration-variable/configuration-variable.component */
     "./src/app/configuration-center/configuration-variable/configuration-variable.component.ts");
     /* harmony import */
 
 
-    var _configuration_callback_configuration_callback_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+    var _configuration_callback_configuration_callback_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
     /*! ./configuration-callback/configuration-callback.component */
     "./src/app/configuration-center/configuration-callback/configuration-callback.component.ts");
     /* harmony import */
 
 
-    var _configuration_event_binding_configuration_event_binding_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+    var _configuration_event_binding_configuration_event_binding_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
     /*! ./configuration-event-binding/configuration-event-binding.component */
     "./src/app/configuration-center/configuration-event-binding/configuration-event-binding.component.ts");
+    /* harmony import */
+
+
+    var _core_guards_auth_guard__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+    /*! ../@core/guards/auth.guard */
+    "./src/app/@core/guards/auth.guard.ts");
+    /* harmony import */
+
+
+    var _core_layouts_main_layout_main_layout_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+    /*! ../@core/layouts/main-layout/main-layout.component */
+    "./src/app/@core/layouts/main-layout/main-layout.component.ts");
 
     var routes = [{
       path: '',
-      component: _configuration_layout_configuration_layout_component__WEBPACK_IMPORTED_MODULE_2__["ConfigurationLayoutComponent"],
+      canActivate: [_core_guards_auth_guard__WEBPACK_IMPORTED_MODULE_6__["AuthGuard"]],
+      component: _core_layouts_main_layout_main_layout_component__WEBPACK_IMPORTED_MODULE_7__["MainLayoutComponent"],
       children: [{
         path: '',
-        component: _configuration_configuration_component__WEBPACK_IMPORTED_MODULE_3__["ConfigurationComponent"]
+        component: _configuration_configuration_component__WEBPACK_IMPORTED_MODULE_2__["ConfigurationComponent"]
       }, {
         path: 'variables',
-        component: _configuration_variable_configuration_variable_component__WEBPACK_IMPORTED_MODULE_4__["ConfigurationVariableComponent"]
+        component: _configuration_variable_configuration_variable_component__WEBPACK_IMPORTED_MODULE_3__["ConfigurationVariableComponent"]
       }, {
         path: 'callback',
-        component: _configuration_callback_configuration_callback_component__WEBPACK_IMPORTED_MODULE_5__["ConfigurationCallbackComponent"]
+        component: _configuration_callback_configuration_callback_component__WEBPACK_IMPORTED_MODULE_4__["ConfigurationCallbackComponent"]
       }, {
         path: 'event-binding',
-        component: _configuration_event_binding_configuration_event_binding_component__WEBPACK_IMPORTED_MODULE_6__["ConfigurationEventBindingComponent"]
+        component: _configuration_event_binding_configuration_event_binding_component__WEBPACK_IMPORTED_MODULE_5__["ConfigurationEventBindingComponent"]
       }]
     }];
 
@@ -1697,6 +1704,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     var _c1 = function _c1() {
       return {
+        disabled: true
+      };
+    };
+
+    var _c2 = function _c2() {
+      return {
         disabled: true,
         height: "100"
       };
@@ -1726,11 +1739,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](8, "dxi-item", 7);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](9, "dxi-item", 8);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](10, "dxo-label", 9);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](9, "dxo-label", 8);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](10, "dxi-item", 9);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](11, "dxi-item", 10);
 
@@ -1756,15 +1769,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](19, "dxi-item", 18);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](20, "dxi-item", 19);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](21, "dxo-label", 20);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](20, "dxo-label", 19);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](21, "dxi-item", 20);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](22, "dxi-item", 21);
 
@@ -1778,13 +1791,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](26, "dxi-item", 25);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](27, "dxi-item", 26);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](27, "dxo-label", 26);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](28, "dxo-label", 27);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](28, "dxi-item", 27);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](29, "dxi-item", 28);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](30, "dxo-label", 29);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
 
@@ -1798,15 +1817,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](29, "nb-card-footer");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](31, "nb-card-footer");
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](30, "div", 28);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](32, "div", 30);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](31, "div", 29);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](33, "div", 31);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](32, "dx-button", 30);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](34, "dx-button", 32);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("onClick", function ConfigurationComponent_ng_container_0_Template_dx_button_onClick_32_listener() {
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("onClick", function ConfigurationComponent_ng_container_0_Template_dx_button_onClick_34_listener() {
           _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r6);
 
           var ctx_r5 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
@@ -1818,11 +1837,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](33, "div", 29);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](35, "div", 31);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](34, "dx-button", 31);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](36, "dx-button", 33);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("onClick", function ConfigurationComponent_ng_container_0_Template_dx_button_onClick_34_listener() {
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("onClick", function ConfigurationComponent_ng_container_0_Template_dx_button_onClick_36_listener() {
           _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵrestoreView"](_r6);
 
           var ctx_r7 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵnextContext"]();
@@ -1852,11 +1871,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("tabPanelOptions", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction0"](3, _c0));
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("tabPanelOptions", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction0"](4, _c0));
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("editorOptions", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction0"](5, _c1));
 
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](13);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("editorOptions", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction0"](4, _c1));
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("editorOptions", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction0"](6, _c2));
       }
     }
 
@@ -1947,10 +1970,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       selectors: [["app-configuration"]],
       decls: 2,
       vars: 2,
-      consts: [[4, "ngIf"], ["shadingColor", "rgba(0,0,0,0.3)", 3, "visible"], [3, "formData"], ["itemType", "tabbed", 3, "tabPanelOptions"], ["title", "\u041E\u0431\u0449\u0438\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438"], ["dataField", "titleOrganization"], ["text", "\u041D\u0430\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u043D\u0438\u0435 \u0438\u043D\u0442\u0435\u0433\u0440\u0430\u0446\u0438\u0438"], ["itemType", "group", "caption", "AMI \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435"], ["dataField", "AMI_server"], ["text", "\u0421\u0435\u0440\u0432\u0435\u0440"], ["dataField", "AMI_username"], ["text", "\u0418\u043C\u044F \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F"], ["dataField", "AMI_password"], ["text", "\u041F\u0430\u0440\u043E\u043B\u044C"], ["dataField", "AMI_port"], ["text", "\u041F\u043E\u0440\u0442"], ["dataField", "state", "editorType", "dxTextArea", 3, "editorOptions"], ["text", "\u0421\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435"], ["itemType", "group", "caption", "\u0418\u043D\u0442\u0435\u0433\u0440\u0430\u0446\u0438\u044F"], ["dataField", "authKey"], ["text", "\u041A\u043B\u044E\u0447 \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u0438"], ["dataField", "baseUrl"], ["text", "\u0411\u0430\u0437\u043E\u0432\u044B\u0439 \u0430\u0434\u0440\u0435\u0441"], ["dataField", "defaultResponsibles"], ["text", "\u041E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E"], ["itemType", "group", "caption", "\u0414\u0440\u0443\u0433\u0438\u0435"], ["dataField", "uniqueFieldName"], ["text", "\u041F\u043E\u043B\u0435 \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0437\u0432\u043E\u043D\u043A\u0430"], [1, "row", "justify-content-between"], [1, "col-4"], ["text", "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C", 3, "onClick"], ["text", "\u0423\u0434\u0430\u043B\u0438\u0442\u044C", "stylingMode", "contained", "type", "danger", 3, "onClick"]],
+      consts: [[4, "ngIf"], ["shadingColor", "rgba(0,0,0,0.3)", 3, "visible"], [3, "formData"], ["itemType", "tabbed", 3, "tabPanelOptions"], ["title", "\u041E\u0431\u0449\u0438\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438"], ["dataField", "id", 3, "editorOptions"], ["text", "\u0418\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440 \u0438\u043D\u0442\u0435\u0433\u0440\u0430\u0446\u0438\u0438"], ["dataField", "titleOrganization"], ["text", "\u041D\u0430\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u043D\u0438\u0435 \u0438\u043D\u0442\u0435\u0433\u0440\u0430\u0446\u0438\u0438"], ["itemType", "group", "caption", "AMI \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435"], ["dataField", "AMI_server"], ["text", "\u0421\u0435\u0440\u0432\u0435\u0440"], ["dataField", "AMI_username"], ["text", "\u0418\u043C\u044F \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F"], ["dataField", "AMI_password"], ["text", "\u041F\u0430\u0440\u043E\u043B\u044C"], ["dataField", "AMI_port"], ["text", "\u041F\u043E\u0440\u0442"], ["dataField", "state", "editorType", "dxTextArea", 3, "editorOptions"], ["text", "\u0421\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435"], ["itemType", "group", "caption", "\u0418\u043D\u0442\u0435\u0433\u0440\u0430\u0446\u0438\u044F"], ["dataField", "authKey"], ["text", "\u041A\u043B\u044E\u0447 \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u0438"], ["dataField", "baseUrl"], ["text", "\u0411\u0430\u0437\u043E\u0432\u044B\u0439 \u0430\u0434\u0440\u0435\u0441"], ["dataField", "defaultResponsibles"], ["text", "\u041E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E"], ["itemType", "group", "caption", "\u0414\u0440\u0443\u0433\u0438\u0435"], ["dataField", "uniqueFieldName"], ["text", "\u041F\u043E\u043B\u0435 \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430 \u0437\u0432\u043E\u043D\u043A\u0430"], [1, "row", "justify-content-between"], [1, "col-4"], ["text", "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C", 3, "onClick"], ["text", "\u0423\u0434\u0430\u043B\u0438\u0442\u044C", "stylingMode", "contained", "type", "danger", 3, "onClick"]],
       template: function ConfigurationComponent_Template(rf, ctx) {
         if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](0, ConfigurationComponent_ng_container_0_Template, 35, 5, "ng-container", 0);
+          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](0, ConfigurationComponent_ng_container_0_Template, 37, 7, "ng-container", 0);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](1, "dx-load-panel", 1);
         }

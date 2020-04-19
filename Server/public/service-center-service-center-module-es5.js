@@ -39,22 +39,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var _operators_center_operators_layout_operators_layout_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
-    /*! ../operators-center/operators-layout/operators-layout.component */
-    "./src/app/operators-center/operators-layout/operators-layout.component.ts");
+    var _service_service_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+    /*! ./service/service.component */
+    "./src/app/service-center/service/service.component.ts");
     /* harmony import */
 
 
-    var _service_service_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
-    /*! ./service/service.component */
-    "./src/app/service-center/service/service.component.ts");
+    var _core_layouts_main_layout_main_layout_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+    /*! ../@core/layouts/main-layout/main-layout.component */
+    "./src/app/@core/layouts/main-layout/main-layout.component.ts");
 
     var routes = [{
       path: '',
-      component: _operators_center_operators_layout_operators_layout_component__WEBPACK_IMPORTED_MODULE_2__["OperatorsLayoutComponent"],
+      component: _core_layouts_main_layout_main_layout_component__WEBPACK_IMPORTED_MODULE_3__["MainLayoutComponent"],
       children: [{
         path: '',
-        component: _service_service_component__WEBPACK_IMPORTED_MODULE_3__["ServiceComponent"]
+        component: _service_service_component__WEBPACK_IMPORTED_MODULE_2__["ServiceComponent"]
       }]
     }];
 
