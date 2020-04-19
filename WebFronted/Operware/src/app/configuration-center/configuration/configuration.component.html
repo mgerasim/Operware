@@ -5,6 +5,10 @@
         <dxi-item itemType="tabbed" [tabPanelOptions]="{ deferRendering: false }">
           <dxi-tab title="Общие настройки">
 
+            <dxi-item dataField="id" [editorOptions]="{disabled: true }">
+              <dxo-label text="Идентификатор интеграции"></dxo-label>
+            </dxi-item>
+
             <dxi-item dataField="titleOrganization">
               <dxo-label text="Наименование интеграции"></dxo-label>
             </dxi-item>

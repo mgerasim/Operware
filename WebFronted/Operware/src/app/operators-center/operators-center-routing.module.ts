@@ -4,11 +4,12 @@ import {OperatorsLayoutComponent} from './operators-layout/operators-layout.comp
 import {CallsComponent} from './calls/calls.component';
 import {EventsComponent} from './calls/events/events.component';
 import {CallbacksComponent} from './callbacks/callbacks.component';
+import {MainLayoutComponent} from '../@core/layouts/main-layout/main-layout.component';
 
 
 const routes: Routes = [
   {
-    path: '', component: OperatorsLayoutComponent, children: [
+    path: '', component: MainLayoutComponent, children: [
       {
         path: '', component: CallsComponent
       },

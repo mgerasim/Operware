@@ -1,0 +1,29 @@
+
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+
+    <!-- Icon -->
+    <div class="fadeIn first">
+      <img src="assets/integration-background-image.png" id="icon" alt="User Icon" />
+    </div>
+
+    <!-- Login Form -->
+    <form (ngSubmit)="login()">
+      <input type="password" [(ngModel)]="auth.password" id="password" class="fadeIn third" name="login" placeholder="Пароль">
+      <div class="center-block">
+        <recaptcha
+          [(ngModel)]="myRecaptcha"
+          [ngModelOptions]="{standalone: true}"
+        ></recaptcha>
+      </div>
+      <input type="submit" class="fadeIn fourth" value="Вход">
+    </form>
+
+    <!-- Remind Passowrd -->
+    <div id="formFooter">
+
+    </div>
+
+  </div>
+</div>
