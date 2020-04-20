@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Configuration} from '../../@core/models/configuration.model';
 import {ConfigurationService} from '../../@core/services/configuration.service';
 import notify from 'devextreme/ui/notify';
+import {isNullOrUndefined} from "util";
 
 @Component({
   selector: 'app-configuration-event-binding',
@@ -41,11 +42,13 @@ export class ConfigurationEventBindingComponent implements OnInit {
   constructor(private configurationService: ConfigurationService) { }
 
   ngOnInit() {
-    this.configurationService.get().subscribe(configurations => {
-      if (configurations === null) {
-        return;
-      }
-      this.configuration = configurations[0];
+    const id = localStorage.getItem('organization');
+    if (isNullOrUndefined(id)) {
+      throw new Error('Не указнан идентификатор в хранилище ');
+    }
+    this.configurationService.getById(parseInt(id)).subscribe(configuration => {
+      console.log(configuration);
+      this.configuration = configuration;
     });
   }
 

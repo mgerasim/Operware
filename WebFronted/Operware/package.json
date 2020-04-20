@@ -6,6 +6,7 @@
     "start": "ng serve",
     "start:proxy": "ng serve --proxy-config proxy.conf.json",
     "start:proxy:ast12": "ng serve --proxy-config proxy.ast12.conf.json",
+    "start:proxy:avantele": "ng serve --proxy-config proxy.avantele.conf.json",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
