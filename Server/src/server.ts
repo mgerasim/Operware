@@ -133,7 +133,9 @@ class ExampleServer extends Server {
         this.app.use('/callbacks', express.static('public'));
         this.app.use('/configurationVariables', express.static('public'));
         this.app.use('/configuration', express.static('public'));
+        this.app.use('/configuration/*', express.static('public'));
         this.app.use('/exceptions', express.static('public'));
+        this.app.use('/auth', express.static('public'));
     }
 
     private setupConfigurationHandle() {
