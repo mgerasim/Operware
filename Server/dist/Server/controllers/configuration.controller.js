@@ -83,7 +83,9 @@ let ConfigurationController = class ConfigurationController {
     getById(req, res) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
+                console.log(req.params.id);
                 const configuration = yield configuration_1.Configuration.findByPk(req.params.id);
+                console.log(configuration);
                 if (configuration) {
                     res.status(200).send(configuration);
                 }

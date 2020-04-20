@@ -27,6 +27,9 @@ export class ConnectionManager {
             queue: new Queue()
         }
 
+
+        console.log(`Ami connecting: ${configuration.titleOrganization}`);
+
         this.connections.push(connection);
 
         amiClient.connect(configuration.AMI_username,
@@ -40,6 +43,7 @@ export class ConnectionManager {
                 console.log(state);
                 configuration.state = state;
                 try {
+
                     await configuration.save()
                 } catch (err) {
                     console.error(err);
@@ -111,7 +115,7 @@ export class ConnectionManager {
                     configuration.save().then().catch(e => console.error(e.message));
 
 
-                    this.connections.push(connection);
+ //                   this.connections.push(connection);
 
                 });
             }

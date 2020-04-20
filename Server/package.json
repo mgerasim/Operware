@@ -8,7 +8,7 @@
     "start:dev": "nodemon --config \"./nodemon.json\"/",
     "build": "tsc",
     "start": "NODE_ENV=production node dist/Server/start.js",
-    "postbuild": "mkdir -p ./dist/Server/config && cp 'config/config.json' ./dist/Server/config/ && mkdir -p ./dist/Server/public && cp public/* ./dist/Server/public/ && mkdir -p ./dist/Server/public/assets && cp public/assets* ./dist/Server/public/assets",
+    "postbuild": "mkdir -p ./dist/Server/config && cp 'config/config.json' ./dist/Server/config/ && mkdir -p ./dist/Server/public && cp -rf public/ ./dist/Server/public/",
     "deploy": "npm run build && cp -avr ./dist/Server ~/apps/Integrity && cp -avr ./node_modules ~/apps/Integrity/Server",
     "install-deploy": "sh install.sh"
   },

@@ -317,10 +317,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var devextreme_ui_notify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! devextreme/ui/notify */ "./node_modules/devextreme/ui/notify.js");
 /* harmony import */ var devextreme_ui_notify__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(devextreme_ui_notify__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _core_services_configuration_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../@core/services/configuration.service */ "./src/app/@core/services/configuration.service.ts");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
-/* harmony import */ var devextreme_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! devextreme-angular */ "./node_modules/devextreme-angular/__ivy_ngcc__/fesm2015/devextreme-angular.js");
-/* harmony import */ var devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! devextreme-angular/ui/nested */ "./node_modules/devextreme-angular/__ivy_ngcc__/fesm2015/devextreme-angular-ui-nested.js");
+/* harmony import */ var util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! util */ "./node_modules/util/util.js");
+/* harmony import */ var util__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(util__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _core_services_configuration_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../@core/services/configuration.service */ "./src/app/@core/services/configuration.service.ts");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
+/* harmony import */ var devextreme_angular__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! devextreme-angular */ "./node_modules/devextreme-angular/__ivy_ngcc__/fesm2015/devextreme-angular.js");
+/* harmony import */ var devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! devextreme-angular/ui/nested */ "./node_modules/devextreme-angular/__ivy_ngcc__/fesm2015/devextreme-angular-ui-nested.js");
+
 
 
 
@@ -463,11 +466,13 @@ class ConfigurationEventBindingComponent {
         this.loadingVisible = false;
     }
     ngOnInit() {
-        this.configurationService.get().subscribe(configurations => {
-            if (configurations === null) {
-                return;
-            }
-            this.configuration = configurations[0];
+        const id = localStorage.getItem('organization');
+        if (Object(util__WEBPACK_IMPORTED_MODULE_2__["isNullOrUndefined"])(id)) {
+            throw new Error('Не указнан идентификатор в хранилище ');
+        }
+        this.configurationService.getById(parseInt(id)).subscribe(configuration => {
+            console.log(configuration);
+            this.configuration = configuration;
         });
     }
     save() {
@@ -482,7 +487,7 @@ class ConfigurationEventBindingComponent {
         });
     }
 }
-ConfigurationEventBindingComponent.ɵfac = function ConfigurationEventBindingComponent_Factory(t) { return new (t || ConfigurationEventBindingComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_core_services_configuration_service__WEBPACK_IMPORTED_MODULE_2__["ConfigurationService"])); };
+ConfigurationEventBindingComponent.ɵfac = function ConfigurationEventBindingComponent_Factory(t) { return new (t || ConfigurationEventBindingComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_core_services_configuration_service__WEBPACK_IMPORTED_MODULE_3__["ConfigurationService"])); };
 ConfigurationEventBindingComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: ConfigurationEventBindingComponent, selectors: [["app-configuration-event-binding"]], decls: 25, vars: 2, consts: [[4, "ngIf"], ["shadingColor", "rgba(0,0,0,0.3)", 3, "visible"], [3, "formData"], ["itemType", "tabbed", 3, "tabPanelOptions"], ["title", "\u041F\u0440\u0438\u0432\u044F\u0437\u043A\u0430 \u0441\u043E\u0431\u044B\u0442\u0438\u0439"], ["itemType", "group"], [3, "xs", "sm", "md", "lg"], ["itemType", "group", "caption", "\u0421\u043E\u0431\u044B\u0442\u0438\u0435 \u043F\u043E\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u044F \u0437\u0432\u043E\u043D\u043A\u0430"], ["dataField", "incomingStartCallEvent", "editorType", "dxSelectBox", 3, "editorOptions"], ["text", "\u0421\u043E\u0431\u044B\u0442\u0438\u0435"], ["dataField", "incomingStartCallField", "editorType", "dxSelectBox", 3, "editorOptions"], ["text", "\u041F\u043E\u043B\u0435"], ["dataField", "incomingStartCallValue"], ["text", "\u0417\u043D\u0430\u0447\u0435\u043D\u0438\u0435"], ["itemType", "group", "caption", "\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u043F\u043E\u043B\u0435"], ["dataField", "incomingStartCallField2", "editorType", "dxSelectBox", 3, "editorOptions"], ["dataField", "incomingStartCallValue2"], ["itemType", "group", "caption", "\u0421\u043E\u0431\u044B\u0442\u0438\u0435 \u043E\u0442\u0432\u0435\u0447\u0435\u043D\u043D\u043E\u0433\u043E \u0437\u0432\u043E\u043D\u043A\u0430"], ["dataField", "incomingAnswerCallEvent", "editorType", "dxSelectBox", 3, "editorOptions"], ["dataField", "incomingAnswerCallField", "editorType", "dxSelectBox", 3, "editorOptions"], ["dataField", "incomingAnswerCallValue"], ["dataField", "incomingAnswerCallField2", "editorType", "dxSelectBox", 3, "editorOptions"], ["dataField", "incomingAnswerCallValue2"], ["itemType", "group", "caption", "\u0421\u043E\u0431\u044B\u0442\u0438\u0435 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0438\u044F \u0437\u0432\u043E\u043D\u043A\u0430"], ["dataField", "incomingEndCallEvent", "editorType", "dxSelectBox", 3, "editorOptions"], ["dataField", "incomingEndCallField", "editorType", "dxSelectBox", 3, "editorOptions"], ["dataField", "incomingEndCallValue"], ["dataField", "incomingEndCallField2", "editorType", "dxSelectBox", 3, "editorOptions"], ["dataField", "incomingEndCallValue2"], ["text", "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C", 3, "onClick"]], template: function ConfigurationEventBindingComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](0, ConfigurationEventBindingComponent_ng_container_0_Template, 43, 34, "ng-container", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "h5");
@@ -521,7 +526,7 @@ ConfigurationEventBindingComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODUL
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.configuration);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](24);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("visible", ctx.loadingVisible);
-    } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], devextreme_angular__WEBPACK_IMPORTED_MODULE_4__["DxLoadPanelComponent"], devextreme_angular__WEBPACK_IMPORTED_MODULE_4__["DxFormComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_5__["DxiItemComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_5__["DxiTabComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_5__["DxoColCountByScreenComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_5__["DxoLabelComponent"], devextreme_angular__WEBPACK_IMPORTED_MODULE_4__["DxButtonComponent"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbmZpZ3VyYXRpb24tY2VudGVyL2NvbmZpZ3VyYXRpb24tZXZlbnQtYmluZGluZy9jb25maWd1cmF0aW9uLWV2ZW50LWJpbmRpbmcuY29tcG9uZW50LnNjc3MifQ== */"] });
+    } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_4__["NgIf"], devextreme_angular__WEBPACK_IMPORTED_MODULE_5__["DxLoadPanelComponent"], devextreme_angular__WEBPACK_IMPORTED_MODULE_5__["DxFormComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_6__["DxiItemComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_6__["DxiTabComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_6__["DxoColCountByScreenComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_6__["DxoLabelComponent"], devextreme_angular__WEBPACK_IMPORTED_MODULE_5__["DxButtonComponent"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbmZpZ3VyYXRpb24tY2VudGVyL2NvbmZpZ3VyYXRpb24tZXZlbnQtYmluZGluZy9jb25maWd1cmF0aW9uLWV2ZW50LWJpbmRpbmcuY29tcG9uZW50LnNjc3MifQ== */"] });
 /*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](ConfigurationEventBindingComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
         args: [{
@@ -529,7 +534,7 @@ ConfigurationEventBindingComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODUL
                 templateUrl: './configuration-event-binding.component.html',
                 styleUrls: ['./configuration-event-binding.component.scss']
             }]
-    }], function () { return [{ type: _core_services_configuration_service__WEBPACK_IMPORTED_MODULE_2__["ConfigurationService"] }]; }, null); })();
+    }], function () { return [{ type: _core_services_configuration_service__WEBPACK_IMPORTED_MODULE_3__["ConfigurationService"] }]; }, null); })();
 
 
 /***/ }),

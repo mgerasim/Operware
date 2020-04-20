@@ -596,25 +596,35 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var _core_services_configuration_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+    var util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+    /*! util */
+    "./node_modules/util/util.js");
+    /* harmony import */
+
+
+    var util__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(util__WEBPACK_IMPORTED_MODULE_2__);
+    /* harmony import */
+
+
+    var _core_services_configuration_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
     /*! ../../@core/services/configuration.service */
     "./src/app/@core/services/configuration.service.ts");
     /* harmony import */
 
 
-    var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+    var _angular_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
     /*! @angular/common */
     "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
     /* harmony import */
 
 
-    var devextreme_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+    var devextreme_angular__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
     /*! devextreme-angular */
     "./node_modules/devextreme-angular/__ivy_ngcc__/fesm2015/devextreme-angular.js");
     /* harmony import */
 
 
-    var devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+    var devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
     /*! devextreme-angular/ui/nested */
     "./node_modules/devextreme-angular/__ivy_ngcc__/fesm2015/devextreme-angular-ui-nested.js");
 
@@ -851,12 +861,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         value: function ngOnInit() {
           var _this2 = this;
 
-          this.configurationService.get().subscribe(function (configurations) {
-            if (configurations === null) {
-              return;
-            }
+          var id = localStorage.getItem('organization');
 
-            _this2.configuration = configurations[0];
+          if (Object(util__WEBPACK_IMPORTED_MODULE_2__["isNullOrUndefined"])(id)) {
+            throw new Error('Не указнан идентификатор в хранилище ');
+          }
+
+          this.configurationService.getById(parseInt(id)).subscribe(function (configuration) {
+            console.log(configuration);
+            _this2.configuration = configuration;
           });
         }
       }, {
@@ -880,7 +893,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }();
 
     ConfigurationEventBindingComponent.ɵfac = function ConfigurationEventBindingComponent_Factory(t) {
-      return new (t || ConfigurationEventBindingComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_core_services_configuration_service__WEBPACK_IMPORTED_MODULE_2__["ConfigurationService"]));
+      return new (t || ConfigurationEventBindingComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_core_services_configuration_service__WEBPACK_IMPORTED_MODULE_3__["ConfigurationService"]));
     };
 
     ConfigurationEventBindingComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
@@ -966,7 +979,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("visible", ctx.loadingVisible);
         }
       },
-      directives: [_angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], devextreme_angular__WEBPACK_IMPORTED_MODULE_4__["DxLoadPanelComponent"], devextreme_angular__WEBPACK_IMPORTED_MODULE_4__["DxFormComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_5__["DxiItemComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_5__["DxiTabComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_5__["DxoColCountByScreenComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_5__["DxoLabelComponent"], devextreme_angular__WEBPACK_IMPORTED_MODULE_4__["DxButtonComponent"]],
+      directives: [_angular_common__WEBPACK_IMPORTED_MODULE_4__["NgIf"], devextreme_angular__WEBPACK_IMPORTED_MODULE_5__["DxLoadPanelComponent"], devextreme_angular__WEBPACK_IMPORTED_MODULE_5__["DxFormComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_6__["DxiItemComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_6__["DxiTabComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_6__["DxoColCountByScreenComponent"], devextreme_angular_ui_nested__WEBPACK_IMPORTED_MODULE_6__["DxoLabelComponent"], devextreme_angular__WEBPACK_IMPORTED_MODULE_5__["DxButtonComponent"]],
       styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbmZpZ3VyYXRpb24tY2VudGVyL2NvbmZpZ3VyYXRpb24tZXZlbnQtYmluZGluZy9jb25maWd1cmF0aW9uLWV2ZW50LWJpbmRpbmcuY29tcG9uZW50LnNjc3MifQ== */"]
     });
     /*@__PURE__*/
@@ -981,7 +994,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }]
       }], function () {
         return [{
-          type: _core_services_configuration_service__WEBPACK_IMPORTED_MODULE_2__["ConfigurationService"]
+          type: _core_services_configuration_service__WEBPACK_IMPORTED_MODULE_3__["ConfigurationService"]
         }];
       }, null);
     })();

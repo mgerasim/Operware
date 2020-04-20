@@ -18,7 +18,7 @@ class Processor {
             try {
                 yield event_1.Event.create(event);
                 if (event.Event !== 'VarSet') {
-                    //               console.log(event);
+                    //                console.log(event);
                 }
             }
             catch (err) {
@@ -101,13 +101,19 @@ class Processor {
                         called_phone_number: called_phone_number,
                         configurationId: this.configuration.id
                     });
-                    yield this.processorVarSet.eventHandle('CALL_START', caller_id, _callAdded);
+                    yield this.processorVarSet.eventHandle('CALLER_ID', caller_id, _callAdded);
+                    yield this.processorVarSet.eventHandle('PBX_CALL_ID', _callAdded.pbx_call_id, _callAdded);
+                    yield this.processorVarSet.eventHandle('CALL_ID', _callAdded.id, _callAdded);
+                    yield this.processorVarSet.eventHandle('CALL_START', _callAdded.call_start.toISOString(), _callAdded);
                 }
             }
             call = yield call_1.Call.findOne({
                 where: { pbx_call_id: event[this.configuration.uniqueFieldName],
                     configurationId: this.configuration.id }
             });
+            if (!call) {
+                return;
+            }
             const configurationVariables = yield configurationVariable_1.ConfigurationVariable.findAll();
             configurationVariables.forEach((configurationVariable) => tslib_1.__awaiter(this, void 0, void 0, function* () {
                 if (util_1.isNullOrUndefined(configurationVariable.sourceFieldValue) || util_1.isNullOrUndefined(configurationVariable.sourceFieldValue2)) {
@@ -124,55 +130,40 @@ class Processor {
                     }
                 }
             }));
-            if (this.configuration.id > 1) {
-                return;
+            if (event.Event === this.configuration.incomingAnswerCallEvent) {
+                if (this.configuration.incomingAnswerCallValue.includes(event[this.configuration.incomingAnswerCallField])
+                    && this.configuration.incomingAnswerCallValue2.includes(event[this.configuration.incomingAnswerCallField2])) {
+                    if (!util_1.isNullOrUndefined(call.internal)) {
+                        return;
+                    }
+                    call.internal = event['ConnectedLineNum'];
+                    call.call_answer = new Date();
+                    yield call.save();
+                    yield this.processorVarSet.eventHandle('CALL_INTERNAL', call.internal, call);
+                    console.log("Ответ звонка");
+                }
             }
             if (event.Event === this.configuration.incomingEndCallEvent) {
                 if (this.configuration.incomingEndCallValue.includes(event[this.configuration.incomingEndCallField])
                     && this.configuration.incomingEndCallValue2.includes(event[this.configuration.incomingEndCallField2])) {
-                    const call = yield call_1.Call.findOne({
-                        where: {
-                            pbx_call_id: event[this.configuration.uniqueFieldName]
-                        }
-                    });
-                    if (call === undefined || call === null) {
-                        return;
-                    }
                     if (call.call_end !== null) {
                         return;
                     }
                     console.log("Завершение звонка");
                     call.call_end = new Date();
                     yield call.save();
-                    yield this.processorVarSet.eventHandle('CALL_END', '', event[this.configuration.uniqueFieldName]);
+                    yield this.processorVarSet.eventHandle('CALL_END', '', call);
                     if (call.internal !== null) {
                         if (!(call.duration > 0)) {
                             call.duration = Math.round((call.call_end.getTime() - call.call_answer.getTime()) / 1000);
                             yield call.save();
                         }
-                        yield this.processorVarSet.eventHandle('CALL_FINISHED', '', event[this.configuration.uniqueFieldName]);
+                        yield this.processorVarSet.eventHandle('CALL_DURATION', call.duration.toString(), call);
+                        yield this.processorVarSet.eventHandle('CALL_FINISHED', '', call);
                     }
                     if (call.internal === null) {
-                        yield this.processorVarSet.eventHandle('CALL_LOST', '', event[this.configuration.uniqueFieldName]);
+                        yield this.processorVarSet.eventHandle('CALL_LOST', '', call);
                     }
-                }
-            }
-            if (event.Event === this.configuration.incomingAnswerCallEvent) {
-                if (this.configuration.incomingAnswerCallValue.includes(event[this.configuration.incomingAnswerCallField])
-                    && this.configuration.incomingAnswerCallValue2.includes(event[this.configuration.incomingAnswerCallField2])
-                    && event.Channel.includes('SIP/')) {
-                    const call = yield call_1.Call.findOne({
-                        where: {
-                            pbx_call_id: event[this.configuration.uniqueFieldName]
-                        }
-                    });
-                    if (call === undefined || call === null) {
-                        return;
-                    }
-                    if (!util_1.isNullOrUndefined(call.internal)) {
-                        return;
-                    }
-                    console.log("Ответ звонка");
                 }
             }
             switch (event.Event) {
@@ -180,7 +171,7 @@ class Processor {
                     if (call === undefined || call === null) {
                         return;
                     }
-                    this.processorVarSet.eventHandle(event.Variable, event.Value, call);
+                    yield this.processorVarSet.eventHandle(event.Variable, event.Value, call);
                     if (event.Variable === 'MIXMONITOR_FILENAME') {
                         const file_link = event.Value.replace('/var/spool/asterisk', `https://${this.configuration.AMI_server}/CRM`).replace('.wav', '.mp3');
                         call.call_filename = file_link;

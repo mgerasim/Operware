@@ -119,7 +119,9 @@ class ExampleServer extends core_1.Server {
         this.app.use('/callbacks', express.static('public'));
         this.app.use('/configurationVariables', express.static('public'));
         this.app.use('/configuration', express.static('public'));
+        this.app.use('/configuration/*', express.static('public'));
         this.app.use('/exceptions', express.static('public'));
+        this.app.use('/auth', express.static('public'));
     }
     setupConfigurationHandle() {
         this.app.use('/configurations/:id', (req, res) => tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -130,9 +132,7 @@ class ExampleServer extends core_1.Server {
                     throw new Error(`Конфигурация не найдена ${id}`);
                 }
                 console.log(this.connectionManager.connections.map(x => x.configuration.id));
-                console.log(this.connectionManager.connections.length);
                 const connection = this.connectionManager.connections.find(x => x.configuration.id === id);
-                console.log(connection);
                 if (!connection) {
                     throw new Error(`Подключение не найдена по конфигурации ${id}`);
                 }
@@ -151,7 +151,7 @@ class ExampleServer extends core_1.Server {
             configurations.forEach(configuration => {
                 this.connectionManager.add(configuration);
             });
-            console.log(this.connectionManager.connections.find(x => x.configuration.id));
+            console.log(this.connectionManager.connections.find(x => x.configuration.id).configuration.titleOrganization);
             this.setupConfigurationHandle();
         })
             .error(err => {

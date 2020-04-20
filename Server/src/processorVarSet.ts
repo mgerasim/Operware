@@ -65,6 +65,7 @@ export class ProcessorVarSet {
         variables.forEach(variable => {
             requestBody = requestBody.replace(`@${variable.title}`, variable.value);
             requestUrl = requestUrl.replace(`@${variable.title}`, variable.value);
+
         });
         variables.forEach(variable => {
             requestBody = requestBody.replace(`@${variable.title}`, variable.value);
@@ -74,6 +75,14 @@ export class ProcessorVarSet {
             requestBody = requestBody.replace(`@${variable.title}`, variable.value);
             requestUrl = requestUrl.replace(`@${variable.title}`, variable.value);
         });
+
+        const date = new Date();
+        requestBody = requestBody.replace(`@NOW`, date.toISOString());
+        requestUrl = requestUrl.replace(`@NOW`, date.toISOString());
+        requestBody = requestBody.replace(`@NOW`, date.toISOString());
+        requestUrl = requestUrl.replace(`@NOW`, date.toISOString());
+        requestBody = requestBody.replace(`@NOW`, date.toISOString());
+        requestUrl = requestUrl.replace(`@NOW`, date.toISOString());
 
         console.log(requestBody);
         console.log(requestUrl);

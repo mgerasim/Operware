@@ -149,9 +149,7 @@ class ExampleServer extends Server {
                 }
 
                 console.log(this.connectionManager.connections.map(x => x.configuration.id));
-                console.log(this.connectionManager.connections.length);
                 const connection = this.connectionManager.connections.find(x => x.configuration.id === id);
-                console.log(connection);
                 if (!connection) {
                     throw new Error(`Подключение не найдена по конфигурации ${id}`);
                 }
@@ -171,7 +169,7 @@ class ExampleServer extends Server {
                 this.connectionManager.add(configuration);
             });
 
-            console.log(this.connectionManager.connections.find(x => x.configuration.id));
+            console.log(this.connectionManager.connections.find(x => x.configuration.id).configuration.titleOrganization);
             this.setupConfigurationHandle();
         })
         .error(err => {

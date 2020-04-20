@@ -99,7 +99,9 @@ export class ConfigurationController  {
     @Get(':id')
     private async getById(req: Request, res: Response) {
         try {
+            console.log(req.params.id);
             const configuration = await Configuration.findByPk(req.params.id);
+            console.log(configuration);
             if (configuration) {
                 res.status(200).send(configuration);
             } else {
