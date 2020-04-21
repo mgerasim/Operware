@@ -89,7 +89,7 @@ export class ProcessorVarSet {
 
         try {
 
-            const response = await axios.post<any>(requestUrl, requestBody, {
+            const response = await axios.get<any>(requestUrl, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'authtoken': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiaTYyNjExIiwibmFtZSI6Ik1JS0hBSUwgR0VSQVNJTU9WIiwicGFzc3dvcmQiOm51bGwsIkFQSV9USU1FIjoxNTg3NDU4NjQ0fQ.kWdENdPqJAZsuvIoWXrlOi5ItdpJ81XEuhNCiTrcSfY'
