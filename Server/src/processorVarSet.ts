@@ -53,6 +53,9 @@ export class ProcessorVarSet {
         } catch {
             requestBody = configurationVariable.requestBody;
         }
+        if (requestBody === null) {
+            requestBody = '';
+        }
 
         let requestUrl = configurationVariable.requestUrl;
 
