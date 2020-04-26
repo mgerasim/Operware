@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const logger_1 = require("@overnightjs/logger");
+const event_1 = require("./models/event");
 const call_1 = require("./models/call");
 const util_1 = require("util");
 const processorVarSet_1 = require("./processorVarSet");
@@ -15,7 +16,7 @@ class Processor {
     eventHandle(event) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                //           await Event.create(event);
+                yield event_1.Event.create(event);
                 if (event.Event !== 'VarSet') {
                     //                console.log(event);
                 }
