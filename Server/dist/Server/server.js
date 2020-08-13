@@ -31,9 +31,8 @@ class ExampleServer extends core_1.Server {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.setupStatic();
-        this.setupControllers();
         this.setupDatabaseProvider();
-        2;
+        this.setupControllers();
         this.setupConnectionManager();
         this.setupSchedule();
         this.setupQueue();
